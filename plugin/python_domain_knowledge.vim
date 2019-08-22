@@ -9,10 +9,10 @@ python3 sys.path.append(vim.eval('expand("<sfile>:p:h")'))
 "  Functions
 " -------------------
 
-function! PythonDomainKnownledge()
+function! PythonDomainKnowledge()
 python3 << endOfPython
-from src.main import hello_world
+from src.main import main
 
-hello_world()
+main()
 endOfPython
 endfunction
