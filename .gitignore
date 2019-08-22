@@ -1,6 +1,9 @@
 # Python
 *.py[cod]
 __pycache__
+#
+# Mypy
+.mypy_cache/
 
 # Vim
 *~
