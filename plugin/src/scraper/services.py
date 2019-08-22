@@ -2,8 +2,8 @@ import os
 import ast
 from collections import namedtuple
 
-
 from ..settings import CURRENT_DIRECTORY
+
 
 Import = namedtuple("Import", ["module", "name", "alias"])
 
@@ -27,12 +27,17 @@ def get_imports_from_file(path):
         root = ast.parse(file.read(), path)
 
     for node in ast.iter_child_nodes(root):
-        if isinstance(node, ast.Import):
-            module = []
-        elif isinstance(node, ast.ImportFrom):
-            module = node.module.split('.')
-        else:
+        is_import = isinstance(node, ast.Import)
+        is_import_from = isinstance(node, ast.ImportFrom)
+
+        if not (is_import or is_import_from):
             continue
+
+        if is_import:
+            module = []
+
+        if is_import_from:
+            module = node.module.split('.')
 
         for n in node.names:
             yield Import(module, n.name.split('.'), n.asname)
@@ -40,5 +45,4 @@ def get_imports_from_file(path):
 
 def get_imports_from_files(paths):
     for path in paths:
-        for import_obj in get_imports_from_file(path):
-            yield import_obj
+        yield from get_imports_from_file(path)
