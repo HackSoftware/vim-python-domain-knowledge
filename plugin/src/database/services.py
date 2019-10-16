@@ -57,6 +57,14 @@ def setup_database():
     _create_exports_table()
 
 
+def setup_dictionary(exports: List[Export]):
+    from ..settings import DICTIONARY_PATH
+
+    with open(DICTIONARY_PATH, 'w') as file:
+        for export in exports:
+            file.write(f'{export.name}\n')
+
+
 def insert_imports(imports: List[Import]):
     imports_values = [
         f'("{".".join(obj.module)}", "{".".join(obj.name)}", "{obj.alias or ""}")'

@@ -38,10 +38,13 @@ def get_imports_from_file(path):
             module = []
 
         if is_import_from:
-            module = node.module.split('.')
+            module = ''
+            if node.module:
+                module = node.module.split('.')
 
         for n in node.names:
             yield Import(module, n.name.split('.'), n.asname)
+
 
 def get_exports_from_file(path):
     with open(path, 'r') as file:
@@ -61,8 +64,6 @@ def get_exports_from_file(path):
                 node.name,
                 'class'
             )
-
-
 
 
 def find_proper_line_for_import(path, module_name):

@@ -1,10 +1,18 @@
 import os
-from .settings import KNOWLEDGE_DIRECTORY
+from .settings import KNOWLEDGE_DIRECTORY, DICTIONARY_PATH
 from .scraper import extract_all_imports, extract_all_exports, find_proper_line_for_import, is_import_in_file
-from .database.services import setup_database, insert_imports, get_import_statement, insert_exports
+from .database.services import (
+    setup_database,
+    setup_dictionary,
+    insert_imports,
+    get_import_statement,
+    insert_exports
+)
 
 
 def setup():
+    import vim
+
     if not os.path.isdir(KNOWLEDGE_DIRECTORY):
         os.mkdir(KNOWLEDGE_DIRECTORY)
 
@@ -13,9 +21,10 @@ def setup():
     imports = extract_all_imports()
     insert_imports(imports=imports)
 
-    exports = extract_all_exports()
+    exports = list(extract_all_exports())
     insert_exports(exports=exports)
 
+    setup_dictionary(exports=exports)
 
 def fill_import():
     import vim
