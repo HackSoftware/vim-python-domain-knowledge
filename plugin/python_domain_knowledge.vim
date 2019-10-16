@@ -15,6 +15,9 @@ from src.main import setup
 
 setup()
 endOfPython
+" TODO: Ideally get this from the python settings
+set complete+=k
+set dictionary+=.vim_domain_knowledge/vim_domain_knowledge_dictionary.txt
 endfunction
 
 function! PythonDomainKnowledgeFillImport()

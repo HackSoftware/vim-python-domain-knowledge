@@ -1,6 +1,6 @@
 import sqlite3
 from typing import List
-from ..scraper.services import Import
+from ..scraper.services import Import, Export
 
 
 def _get_db_connection():
@@ -23,9 +23,26 @@ def _create_imports_table():
     create_table_query = '''
     CREATE TABLE IF NOT EXISTS imports (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-        MODULE text,
-        NAME text,
-        ALIAS text
+        module TEXT,
+        name TEXT,
+        alias TEXT
+    )
+    '''
+    return _run_query(create_table_query)
+
+
+def _create_exports_table():
+    drop_table_query = '''
+    DROP TABLE IF EXISTS exports
+    '''
+    _run_query(drop_table_query)
+
+    create_table_query = '''
+    CREATE TABLE IF NOT EXISTS exports (
+        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        path TEXT,
+        name TEXT,
+        type TEXT
     )
     '''
     return _run_query(create_table_query)
@@ -37,6 +54,15 @@ def setup_database():
 
     # Create tables
     _create_imports_table()
+    _create_exports_table()
+
+
+def setup_dictionary(exports: List[Export]):
+    from ..settings import DICTIONARY_PATH
+
+    with open(DICTIONARY_PATH, 'w') as file:
+        for export in exports:
+            file.write(f'{export.name}\n')
 
 
 def insert_imports(imports: List[Import]):
@@ -55,10 +81,36 @@ def insert_imports(imports: List[Import]):
     return _run_query(query)
 
 
+def insert_exports(exports: List[Export]):
+    exports_values = [
+        f'("{obj.path}", "{obj.name}", "{obj.type}")'
+        for obj in exports
+    ]
+    exports_str = ', '.join(exports_values)
+
+    query = f'''
+    INSERT INTO exports
+        (PATH, NAME, TYPE)
+        VALUES {exports_str}
+    '''
+
+    return _run_query(query)
+
+
 def get_import_statement(obj_to_import: str):
     connection = _get_db_connection()
     cursor = connection.cursor()
-    cursor.execute('SELECT module, name FROM imports WHERE name=?', (obj_to_import, ))
+
+    cursor.execute(
+        '''
+        SELECT module, name
+            FROM imports
+            WHERE name=?
+            GROUP BY module
+            ORDER BY COUNT(*)
+        ''',
+        (obj_to_import, )
+    )
 
     result = cursor.fetchone()
 
