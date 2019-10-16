@@ -43,6 +43,23 @@ def get_imports_from_file(path):
             yield Import(module, n.name.split('.'), n.asname)
 
 
+def find_proper_line_for_import(path, module_name):
+    # TODO: Rework this ? :(
+    for line_number, line in enumerate(open(path, 'r')):
+        if module_name in line:
+            return line_number
+
+    return 0
+
 def get_imports_from_files(paths):
     for path in paths:
         yield from get_imports_from_file(path)
+
+
+def is_import_in_file(*, import_statement, path):
+    return any(
+        [
+            bool(import_statement in line)
+            for line in open(path, 'r')
+        ]
+    )
