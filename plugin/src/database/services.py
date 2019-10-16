@@ -64,6 +64,12 @@ def get_import_statement(obj_to_import: str):
 
     if result:
         if result[0]:
-            return f'from {result[0]} import {result[1]}'
+            return {
+                'raw': f'from {result[0]} import {result[1]}',
+                'module': result[0]
+            }
 
-        return f'import {result[1]}'
+        return {
+            'raw': f'import {result[1]}',
+            'module': result[1]
+        }
