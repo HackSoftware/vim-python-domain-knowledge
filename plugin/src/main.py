@@ -1,7 +1,7 @@
 import os
 from .settings import KNOWLEDGE_DIRECTORY
-from .scraper import extract_all_imports, find_proper_line_for_import, is_import_in_file
-from .database.services import setup_database, insert_imports, get_import_statement
+from .scraper import extract_all_imports, extract_all_exports, find_proper_line_for_import, is_import_in_file
+from .database.services import setup_database, insert_imports, get_import_statement, insert_exports
 
 
 def setup():
@@ -11,8 +11,10 @@ def setup():
     setup_database()
 
     imports = extract_all_imports()
-
     insert_imports(imports=imports)
+
+    exports = extract_all_exports()
+    insert_exports(exports=exports)
 
 
 def fill_import():

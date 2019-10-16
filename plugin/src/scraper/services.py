@@ -6,6 +6,7 @@ from ..settings import CURRENT_DIRECTORY
 
 
 Import = namedtuple("Import", ["module", "name", "alias"])
+Export = namedtuple("Export", ["path", "name", "type"])
 
 
 def find_all_files():
@@ -42,6 +43,27 @@ def get_imports_from_file(path):
         for n in node.names:
             yield Import(module, n.name.split('.'), n.asname)
 
+def get_exports_from_file(path):
+    with open(path, 'r') as file:
+        root = ast.parse(file.read(), path)
+
+    for node in ast.iter_child_nodes(root):
+        if isinstance(node, ast.FunctionDef):
+            yield Export(
+                path,
+                node.name,
+                'function'
+            )
+
+        if isinstance(node, ast.ClassDef):
+            yield Export(
+                path,
+                node.name,
+                'class'
+            )
+
+
+
 
 def find_proper_line_for_import(path, module_name):
     # TODO: Rework this ? :(
@@ -55,6 +77,10 @@ def get_imports_from_files(paths):
     for path in paths:
         yield from get_imports_from_file(path)
 
+
+def get_exports_from_files(paths):
+    for path in paths:
+        yield from get_exports_from_file(path)
 
 def is_import_in_file(*, import_statement, vim_buffer):
     return any(
