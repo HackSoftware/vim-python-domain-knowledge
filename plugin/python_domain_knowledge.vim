@@ -8,6 +8,9 @@ python3 sys.path.append(vim.eval('expand("<sfile>:p:h")'))
 " -------------------
 "  Functions
 " -------------------
+" TODO: This is temporary
+set complete+=k
+set dictionary+=.vim_domain_knowledge/vim_domain_knowledge_dictionary.txt
 
 function! PythonDomainKnowledgeCollectImports()
 python3 << endOfPython
