@@ -28,7 +28,7 @@ def fill_import():
     import_statement = get_import_statement(obj_to_import=current_word)
 
     if import_statement:
-        if is_import_in_file(import_statement=import_statement['raw'], path=current_buffer.name):
+        if is_import_in_file(import_statement=import_statement['raw'], vim_buffer=current_buffer):
             print(f'"{current_word}" is already imported')
             return
 

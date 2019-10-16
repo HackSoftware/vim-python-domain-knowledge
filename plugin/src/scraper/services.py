@@ -56,10 +56,10 @@ def get_imports_from_files(paths):
         yield from get_imports_from_file(path)
 
 
-def is_import_in_file(*, import_statement, path):
+def is_import_in_file(*, import_statement, vim_buffer):
     return any(
         [
             bool(import_statement in line)
-            for line in open(path, 'r')
+            for line in vim_buffer
         ]
     )
