@@ -25,4 +25,3 @@ __all__ = [
     'is_imported_or_defined_in_file',
     'find_proper_line_for_import',
 ]
-
