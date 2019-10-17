@@ -25,8 +25,8 @@ The aim of this plugin is to automate this process by generating knowledge for y
 
 ## API for 1.0.0
 
-- Vim function that triggers refresh of the project knowledge
-- Vim function that triggers suggestion of import source and auto add the import on confirmation
+- ~Vim function that triggers refresh of the project knowledge~
+- ~Vim function that triggers suggestion of import source and auto add the import on confirmation~
 - Vim function that opens dropdown for the word under the cursor suggesting the `N most possible classes/functions/variables with their sources` in the project that fuzzy matches the pattern (+ autoadd the import at the right place)
 
 ## Technical requirements for 1.0.0:
