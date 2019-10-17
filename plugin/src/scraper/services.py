@@ -102,7 +102,7 @@ def is_imported_or_defined_in_file(*, stuff_to_import, vim_buffer):
                 return True
 
         if isinstance(node, ast.Assign):
-            if node.name in [el.id for el in node.targets]:
+            if stuff_to_import in [el.id for el in node.targets]:
                 return True
 
     return False
