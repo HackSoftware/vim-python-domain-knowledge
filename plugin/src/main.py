@@ -4,7 +4,7 @@ from .scraper import (
     extract_all_imports,
     extract_all_exports,
     find_proper_line_for_import,
-    is_import_in_file
+    is_imported_or_defined_in_file
 )
 from .database.services import (
     setup_database,
@@ -42,12 +42,12 @@ def fill_import():
     import_statement = get_import_statement(obj_to_import=current_word)
 
     if import_statement:
-        already_imported = is_import_in_file(
-            import_statement=import_statement['raw'],
+        already_imported = is_imported_or_defined_in_file(
+            stuff_to_import=current_word,
             vim_buffer=current_buffer
         )
         if already_imported:
-            print(f'"{current_word}" is already imported')
+            print(f'"{current_word}" is already visible in file scope')
             return
 
         line_to_insert_import = find_proper_line_for_import(
