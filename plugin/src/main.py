@@ -1,6 +1,11 @@
 import os
-from .settings import KNOWLEDGE_DIRECTORY, DICTIONARY_PATH
-from .scraper import extract_all_imports, extract_all_exports, find_proper_line_for_import, is_import_in_file
+from .settings import KNOWLEDGE_DIRECTORY
+from .scraper import (
+    extract_all_imports,
+    extract_all_exports,
+    find_proper_line_for_import,
+    is_import_in_file
+)
 from .database.services import (
     setup_database,
     setup_dictionary,
@@ -11,8 +16,6 @@ from .database.services import (
 
 
 def setup():
-    import vim
-
     if not os.path.isdir(KNOWLEDGE_DIRECTORY):
         os.mkdir(KNOWLEDGE_DIRECTORY)
 
@@ -39,7 +42,11 @@ def fill_import():
     import_statement = get_import_statement(obj_to_import=current_word)
 
     if import_statement:
-        if is_import_in_file(import_statement=import_statement['raw'], vim_buffer=current_buffer):
+        already_imported = is_import_in_file(
+            import_statement=import_statement['raw'],
+            vim_buffer=current_buffer
+        )
+        if already_imported:
             print(f'"{current_word}" is already imported')
             return
 

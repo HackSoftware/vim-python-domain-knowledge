@@ -67,7 +67,7 @@ def setup_dictionary(exports: List[Export]):
 
 def insert_imports(imports: List[Import]):
     imports_values = [
-        f'("{".".join(obj.module)}", "{".".join(obj.name)}", "{obj.alias or ""}")'
+        f'("{".".join(obj.module)}", "{".".join(obj.name)}", "{obj.alias or ""}")'  # noqa
         for obj in imports
     ]
     imports_str = ', '.join(imports_values)

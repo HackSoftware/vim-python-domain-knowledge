@@ -12,6 +12,7 @@ def extract_all_imports():
 
     return get_imports_from_files(python_files)
 
+
 def extract_all_exports():
     python_files = find_all_files()
 
@@ -21,4 +22,6 @@ def extract_all_exports():
 __all__ = [
     'extract_all_imports',
     'extract_all_exports',
+    'is_import_in_file',
+    'find_proper_line_for_import',
 ]
