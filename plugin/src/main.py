@@ -60,6 +60,8 @@ def fill_import():
         current_buffer.append(import_statement['raw'], line_to_insert_import)
         current_window.cursor = (cursor_current_row + 1, cursor_current_col)
 
+        return
+
     # Step 2: Search in the existing exportss
     export_statement = get_export_statement(export_name=current_word)
     if export_statement:
@@ -80,3 +82,5 @@ def fill_import():
 
         current_buffer.append(import_statement, line_to_insert_import)
         current_window.cursor = (cursor_current_row + 1, cursor_current_col)
+
+        return
