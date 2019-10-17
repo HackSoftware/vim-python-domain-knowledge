@@ -67,7 +67,7 @@ def setup_dictionary(exports: List[Export]):
 
 def insert_imports(imports: List[Import]):
     imports_values = [
-        f'("{".".join(obj.module)}", "{".".join(obj.name)}", "{obj.alias or ""}")'
+        f'("{".".join(obj.module)}", "{".".join(obj.name)}", "{obj.alias or ""}")'  # noqa
         for obj in imports
     ]
     imports_str = ', '.join(imports_values)
@@ -124,4 +124,26 @@ def get_import_statement(obj_to_import: str):
         return {
             'raw': f'import {result[1]}',
             'module': result[1]
+        }
+
+
+def get_export_statement(export_name: str):
+    connection = _get_db_connection()
+    cursor = connection.cursor()
+
+    cursor.execute(
+        '''
+        SELECT path, name
+            FROM exports
+            WHERE name=?
+        ''',
+        (export_name, )
+    )
+
+    result = cursor.fetchone()
+
+    if result:
+        return {
+            'path': result[0],
+            'name': result[1]
         }

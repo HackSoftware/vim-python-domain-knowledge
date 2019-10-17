@@ -4,7 +4,6 @@ from collections import namedtuple
 
 from ..settings import CURRENT_DIRECTORY
 
-
 Import = namedtuple("Import", ["module", "name", "alias"])
 Export = namedtuple("Export", ["path", "name", "type"])
 
@@ -66,13 +65,14 @@ def get_exports_from_file(path):
             )
 
 
-def find_proper_line_for_import(path, module_name):
+def find_proper_line_for_import(buffer, module_name):
     # TODO: Rework this ? :(
-    for line_number, line in enumerate(open(path, 'r')):
+    for line_number, line in enumerate(buffer):
         if module_name in line:
             return line_number
 
     return 0
+
 
 def get_imports_from_files(paths):
     for path in paths:
@@ -83,10 +83,26 @@ def get_exports_from_files(paths):
     for path in paths:
         yield from get_exports_from_file(path)
 
-def is_import_in_file(*, import_statement, vim_buffer):
-    return any(
-        [
-            bool(import_statement in line)
-            for line in vim_buffer
-        ]
-    )
+
+def is_imported_or_defined_in_file(*, stuff_to_import, vim_buffer):
+    file_content = '\n'.join(vim_buffer)
+
+    if stuff_to_import not in file_content:
+        return False
+
+    module = ast.parse(file_content)
+
+    for node in ast.iter_child_nodes(module):
+        if isinstance(node, ast.Import) or isinstance(node, ast.ImportFrom):
+            if stuff_to_import in [el.name for el in node.names]:
+                return True
+
+        if isinstance(node, ast.FunctionDef) or isinstance(node, ast.ClassDef):
+            if node.name == stuff_to_import:
+                return True
+
+        if isinstance(node, ast.Assign):
+            if stuff_to_import in [el.id for el in node.targets]:
+                return True
+
+    return False
