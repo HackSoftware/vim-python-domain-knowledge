@@ -125,3 +125,25 @@ def get_import_statement(obj_to_import: str):
             'raw': f'import {result[1]}',
             'module': result[1]
         }
+
+
+def get_export_statement(export_name: str):
+    connection = _get_db_connection()
+    cursor = connection.cursor()
+
+    cursor.execute(
+        '''
+        SELECT path, name
+            FROM exports
+            WHERE name=?
+        ''',
+        (export_name, )
+    )
+
+    result = cursor.fetchone()
+
+    if result:
+        return {
+            'path': result[0],
+            'name': result[1]
+        }
