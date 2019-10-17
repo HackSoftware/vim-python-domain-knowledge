@@ -66,13 +66,14 @@ def get_exports_from_file(path):
             )
 
 
-def find_proper_line_for_import(path, module_name):
+def find_proper_line_for_import(buffer, module_name):
     # TODO: Rework this ? :(
-    for line_number, line in enumerate(open(path, 'r')):
+    for line_number, line in enumerate(buffer):
         if module_name in line:
             return line_number
 
     return 0
+
 
 def get_imports_from_files(paths):
     for path in paths:
@@ -82,6 +83,7 @@ def get_imports_from_files(paths):
 def get_exports_from_files(paths):
     for path in paths:
         yield from get_exports_from_file(path)
+
 
 def is_import_in_file(*, import_statement, vim_buffer):
     return any(

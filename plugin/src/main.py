@@ -26,6 +26,7 @@ def setup():
 
     setup_dictionary(exports=exports)
 
+
 def fill_import():
     import vim
 
@@ -35,7 +36,6 @@ def fill_import():
     current_window = vim.current.window
     cursor_current_row, cursor_current_col = current_window.cursor
 
-
     import_statement = get_import_statement(obj_to_import=current_word)
 
     if import_statement:
@@ -44,8 +44,9 @@ def fill_import():
             return
 
         line_to_insert_import = find_proper_line_for_import(
-            path=current_buffer.name,
+            buffer=current_buffer,
             module_name=import_statement['module']
         )
+
         current_buffer.append(import_statement['raw'], line_to_insert_import)
         current_window.cursor = (cursor_current_row + 1, cursor_current_col)

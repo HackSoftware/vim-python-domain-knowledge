@@ -8,7 +8,8 @@ python3 sys.path.append(vim.eval('expand("<sfile>:p:h")'))
 " -------------------
 "  Functions
 " -------------------
-" TODO: This is temporary
+
+" First of all - setup autocomplete dictionary path
 set complete+=k
 set dictionary+=.vim_domain_knowledge/vim_domain_knowledge_dictionary.txt
 
@@ -18,9 +19,6 @@ from src.main import setup
 
 setup()
 endOfPython
-" TODO: Ideally get this from the python settings
-set complete+=k
-set dictionary+=.vim_domain_knowledge/vim_domain_knowledge_dictionary.txt
 endfunction
 
 function! PythonDomainKnowledgeFillImport()
