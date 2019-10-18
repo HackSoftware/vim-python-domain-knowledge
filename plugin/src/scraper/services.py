@@ -22,9 +22,20 @@ def find_all_files():
     return result
 
 
+def _get_ast_from_file(file_content):
+    try:
+        return ast.parse(file_content)
+    except:
+        print('Invalid syntax. Could not parse the file.')
+        return None
+
+
 def get_imports_from_file(path):
     with open(path, 'r') as file:
-        root = ast.parse(file.read(), path)
+        root = _get_ast_from_file(file_content=file.read())
+
+    if not root:
+        return []
 
     for node in ast.iter_child_nodes(root):
         is_import = isinstance(node, ast.Import)
@@ -47,7 +58,10 @@ def get_imports_from_file(path):
 
 def get_exports_from_file(path):
     with open(path, 'r') as file:
-        root = ast.parse(file.read(), path)
+        root = _get_ast_from_file(file_content=file.read())
+
+    if not root:
+        return []
 
     for node in ast.iter_child_nodes(root):
         if isinstance(node, ast.FunctionDef):
@@ -90,7 +104,10 @@ def is_imported_or_defined_in_file(*, stuff_to_import, vim_buffer):
     if stuff_to_import not in file_content:
         return False
 
-    module = ast.parse(file_content)
+    module = _get_ast_from_file(file_content=file_content)
+
+    if not module:
+        return False
 
     for node in ast.iter_child_nodes(module):
         if isinstance(node, ast.Import) or isinstance(node, ast.ImportFrom):
