@@ -48,6 +48,10 @@ def fill_import():
         print(f'"{current_word}" is already visible in file scope')
         return
 
+    if already_imported is None:
+        print('Invalid syntax. Could not parse the file.')
+        return
+
     # Step 1: Search in the existing imports
     import_statement = get_import_statement(obj_to_import=current_word)
 

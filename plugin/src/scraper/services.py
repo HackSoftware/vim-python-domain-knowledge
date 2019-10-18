@@ -26,7 +26,6 @@ def _get_ast_from_file(file_content):
     try:
         return ast.parse(file_content)
     except:
-        print('Invalid syntax. Could not parse the file.')
         return None
 
 
@@ -107,7 +106,7 @@ def is_imported_or_defined_in_file(*, stuff_to_import, vim_buffer):
     module = _get_ast_from_file(file_content=file_content)
 
     if not module:
-        return False
+        return True
 
     for node in ast.iter_child_nodes(module):
         if isinstance(node, ast.Import) or isinstance(node, ast.ImportFrom):
