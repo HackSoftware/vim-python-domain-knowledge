@@ -84,3 +84,5 @@ def fill_import():
         current_window.cursor = (cursor_current_row + 1, cursor_current_col)
 
         return
+
+    print(f'Cannot find "{current_word}" export in the project :(')
