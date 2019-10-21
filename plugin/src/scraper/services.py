@@ -34,13 +34,17 @@ def get_imports_from_file(path):
         if is_import:
             module = []
 
+        is_relative = False
+
         if is_import_from:
             module = ''
+
             if node.module:
+                is_relative = node.level and node.level > 0 # level > 0 means that import is relative
                 module = node.module.split('.')
 
         for n in node.names:
-            yield Import(module, n.name.split('.'), n.asname)
+            yield Import(module, n.name.split('.'), n.asname, is_relative)
 
 
 def get_exports_from_file(path):

@@ -2,7 +2,7 @@ from .base import _get_db_connection
 from .constants import DB_TABLES
 
 
-def get_import_statement(obj_to_import: str):
+def get_absolute_import_statement(obj_to_import: str):
     connection = _get_db_connection()
     cursor = connection.cursor()
 
@@ -10,7 +10,7 @@ def get_import_statement(obj_to_import: str):
         f'''
         SELECT module, name
             FROM {DB_TABLES.IMPORTS}
-            WHERE name=?
+            WHERE name=? and is_relative=0
             GROUP BY module
             ORDER BY COUNT(*)
         ''',

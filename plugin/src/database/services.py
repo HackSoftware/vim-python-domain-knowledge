@@ -23,7 +23,8 @@ def _create_imports_table():
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         module TEXT,
         name TEXT,
-        alias TEXT
+        alias TEXT,
+        is_relative BOOLEAN
     )
     '''
     return _run_query(create_table_query)
@@ -64,15 +65,23 @@ def setup_dictionary(exports: List[Export]):
 
 
 def insert_imports(imports: List[Import]):
-    imports_values = [
-        f'("{".".join(obj.module)}", "{".".join(obj.name)}", "{obj.alias or ""}")'  # noqa
-        for obj in imports
-    ]
+    imports_values = []
+
+    for import_obj in imports:
+        module_str = '.'.join(import_obj.module)
+        name_str = '.'.join(import_obj.name)
+        alias_str = import_obj.alias or ''
+        is_relative_str = '1' if import_obj.is_relative else '0'
+
+        imports_values.append(
+            f'("{module_str}", "{name_str}", "{alias_str}", "{is_relative_str}")'  # noqa
+        )
+
     imports_str = ', '.join(imports_values)
 
     query = f'''
     INSERT INTO {DB_TABLES.IMPORTS}
-        (MODULE, NAME, ALIAS)
+        (MODULE, NAME, ALIAS, IS_RELATIVE)
         VALUES {imports_str}
     '''
 

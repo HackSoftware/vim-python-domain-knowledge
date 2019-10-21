@@ -11,7 +11,7 @@ from src.database import (
     setup_database,
     setup_dictionary,
     insert_imports,
-    get_import_statement,
+    get_absolute_import_statement,
     get_export_statement,
     insert_exports
 )
@@ -48,7 +48,7 @@ def fill_import():
         return
 
     # Step 1: Search in the existing imports
-    import_statement = get_import_statement(obj_to_import=current_word)
+    import_statement = get_absolute_import_statement(obj_to_import=current_word)
 
     if import_statement:
         line_to_insert_import = find_proper_line_for_import(
