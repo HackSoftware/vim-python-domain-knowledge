@@ -1,7 +1,7 @@
 import os
 import ast
 
-from src.common.data_structures import Import, Export
+from src.common.data_structures import Import, Export, Class, Function
 
 from src.settings import CURRENT_DIRECTORY
 
@@ -20,33 +20,72 @@ def find_all_files():
     return result
 
 
-def get_imports_from_file(path):
+def get_ast_objects_from_file(path):
     with open(path, 'r') as file:
         root = ast.parse(file.read(), path)
+
+    imports = []
+    class_definitions = []
+    function_definitions = []
 
     for node in ast.iter_child_nodes(root):
         is_import = isinstance(node, ast.Import)
         is_import_from = isinstance(node, ast.ImportFrom)
+        is_class = isinstance(node, ast.ClassDef)
+        is_function = isinstance(node, ast.FunctionDef)
 
-        if not (is_import or is_import_from):
-            continue
+        if is_import or is_import_from:
+            if is_import:
+                module = []
 
-        if is_import:
-            module = []
+            is_relative = False
 
-        is_relative = False
+            if is_import_from:
+                module = ''
 
-        if is_import_from:
-            module = ''
+                if node.module:
+                    is_relative = node.level and node.level > 0  # level > 0 means that import is relative
+                    module = node.module.split('.')
 
-            if node.module:
-                is_relative = node.level and node.level > 0 # level > 0 means that import is relative
-                module = node.module.split('.')
+            for n in node.names:
+                imports.append(
+                    Import(
+                        module=module,
+                        name=n.name.split('.'),
+                        alias=n.asname,
+                        is_relative=is_relative
+                    )
+                )
 
-        for n in node.names:
-            yield Import(module, n.name.split('.'), n.asname, is_relative)
+        if is_class:
+            parents = []
+            for base in getattr(node, 'bases', []):
+                if isinstance(base, ast.Name):
+                    parents.append(base.id)
+
+                if isinstance(base, ast.Attribute):
+                    parents.append(base.attr)
+
+            class_definitions.append(
+                Class(
+                    file_path=path,
+                    name=node.name,
+                    parents=parents
+                )
+            )
+
+        if is_function:
+            function_definitions.append(
+                Function(
+                    file_path=path,
+                    name=node.name
+                )
+            )
+
+    return imports, class_definitions, function_definitions
 
 
+# TODO: Should be redundant after introducing class_definitions/function_defintions tables
 def get_exports_from_file(path):
     with open(path, 'r') as file:
         root = ast.parse(file.read(), path)
@@ -76,9 +115,19 @@ def find_proper_line_for_import(buffer, module_name):
     return 0
 
 
-def get_imports_from_files(paths):
+def get_ast_objects_from_files(paths):
+    imports = []
+    class_definitions = []
+    function_definitions = []
+
     for path in paths:
-        yield from get_imports_from_file(path)
+        imports_from_file, class_definitions_from_file, function_definitions_from_file = get_ast_objects_from_file(path)
+
+        imports.extend(imports_from_file)
+        class_definitions.extend(class_definitions_from_file)
+        function_definitions.extend(function_definitions_from_file)
+
+    return imports, class_definitions, function_definitions
 
 
 def get_exports_from_files(paths):

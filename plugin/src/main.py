@@ -2,7 +2,7 @@ import os
 from src.common.vim import Vim
 from src.settings import KNOWLEDGE_DIRECTORY, CURRENT_DIRECTORY
 from src.scraper import (
-    extract_all_imports,
+    extract_ast,
     extract_all_exports,
     find_proper_line_for_import,
     is_imported_or_defined_in_file
@@ -11,6 +11,8 @@ from src.database import (
     setup_database,
     setup_dictionary,
     insert_imports,
+    insert_classes,
+    insert_functions,
     get_absolute_import_statement,
     get_export_statement,
     insert_exports
@@ -23,8 +25,16 @@ def setup():
 
     setup_database()
 
-    imports = extract_all_imports()
-    insert_imports(imports=imports)
+    imports, classes, functions = extract_ast()
+
+    if imports:
+        insert_imports(imports=imports)
+
+    if classes:
+        insert_classes(classes=classes)
+
+    if functions:
+        insert_functions(functions=functions)
 
     exports = list(extract_all_exports())
     insert_exports(exports=exports)
