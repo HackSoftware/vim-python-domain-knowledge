@@ -3,6 +3,7 @@ from typing import List
 from src.common.data_structures import Import, Export
 
 from .base import _get_db_connection
+from .constants import DB_TABLES
 
 
 def _run_query(query: str):
@@ -12,13 +13,13 @@ def _run_query(query: str):
 
 
 def _create_imports_table():
-    drop_table_query = '''
-    DROP TABLE IF EXISTS imports
+    drop_table_query = f'''
+    DROP TABLE IF EXISTS {DB_TABLES.IMPORTS}
     '''
     _run_query(drop_table_query)
 
-    create_table_query = '''
-    CREATE TABLE IF NOT EXISTS imports (
+    create_table_query = f'''
+    CREATE TABLE IF NOT EXISTS {DB_TABLES.IMPORTS} (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         module TEXT,
         name TEXT,
@@ -29,13 +30,13 @@ def _create_imports_table():
 
 
 def _create_exports_table():
-    drop_table_query = '''
-    DROP TABLE IF EXISTS exports
+    drop_table_query = f'''
+    DROP TABLE IF EXISTS {DB_TABLES.EXPORTS}
     '''
     _run_query(drop_table_query)
 
-    create_table_query = '''
-    CREATE TABLE IF NOT EXISTS exports (
+    create_table_query = f'''
+    CREATE TABLE IF NOT EXISTS {DB_TABLES.EXPORTS} (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         path TEXT,
         name TEXT,
@@ -70,7 +71,7 @@ def insert_imports(imports: List[Import]):
     imports_str = ', '.join(imports_values)
 
     query = f'''
-    INSERT INTO imports
+    INSERT INTO {DB_TABLES.IMPORTS}
         (MODULE, NAME, ALIAS)
         VALUES {imports_str}
     '''
@@ -86,7 +87,7 @@ def insert_exports(exports: List[Export]):
     exports_str = ', '.join(exports_values)
 
     query = f'''
-    INSERT INTO exports
+    INSERT INTO {DB_TABLES.EXPORTS}
         (PATH, NAME, TYPE)
         VALUES {exports_str}
     '''
