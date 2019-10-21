@@ -1,11 +1,9 @@
 import os
 import ast
-from collections import namedtuple
 
-from ..settings import CURRENT_DIRECTORY
+from src.common.data_structures import Import, Export
 
-Import = namedtuple("Import", ["module", "name", "alias"])
-Export = namedtuple("Export", ["path", "name", "type"])
+from src.settings import CURRENT_DIRECTORY
 
 
 def find_all_files():

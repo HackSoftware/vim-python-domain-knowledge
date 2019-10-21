@@ -1,6 +1,6 @@
-import vim
+from src.common.vim import Vim
 
-CURRENT_DIRECTORY = vim.eval("getcwd()")
+CURRENT_DIRECTORY = Vim.eval("getcwd()")
 KNOWLEDGE_DIRECTORY = f'{CURRENT_DIRECTORY}/.vim_domain_knowledge/'
 DB_NAME = 'vim_domain_knowledge.db'
 DICTIONARY_NAME = 'vim_domain_knowledge_dictionary.txt'

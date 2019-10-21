@@ -1,12 +1,13 @@
 import os
-from .settings import KNOWLEDGE_DIRECTORY, CURRENT_DIRECTORY
-from .scraper import (
+from src.common.vim import Vim
+from src.settings import KNOWLEDGE_DIRECTORY, CURRENT_DIRECTORY
+from src.scraper import (
     extract_all_imports,
     extract_all_exports,
     find_proper_line_for_import,
     is_imported_or_defined_in_file
 )
-from .database.services import (
+from src.database import (
     setup_database,
     setup_dictionary,
     insert_imports,
@@ -32,12 +33,10 @@ def setup():
 
 
 def fill_import():
-    import vim
+    current_word = Vim.eval('expand("<cword>")')
 
-    current_word = vim.eval('expand("<cword>")')
-
-    current_buffer = vim.current.buffer
-    current_window = vim.current.window
+    current_buffer = Vim.get_current_buffer()
+    current_window = Vim.get_current_window()
     cursor_current_row, cursor_current_col = current_window.cursor
 
     already_imported = is_imported_or_defined_in_file(
