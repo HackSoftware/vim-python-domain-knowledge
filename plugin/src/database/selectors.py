@@ -33,28 +33,6 @@ def get_absolute_import_statement(obj_to_import: str):
         }
 
 
-def get_export_statement(export_name: str):
-    connection = _get_db_connection()
-    cursor = connection.cursor()
-
-    cursor.execute(
-        f'''
-        SELECT path, name
-            FROM {DB_TABLES.EXPORTS}
-            WHERE name=?
-        ''',
-        (export_name, )
-    )
-
-    result = cursor.fetchone()
-
-    if result:
-        return {
-            'path': result[0],
-            'name': result[1]
-        }
-
-
 def get_class(class_name: str):
     connection = _get_db_connection()
     cursor = connection.cursor()

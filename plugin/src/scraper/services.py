@@ -1,7 +1,7 @@
 import os
 import ast
 
-from src.common.data_structures import Import, Export, Class, Function
+from src.common.data_structures import Import, Class, Function
 
 from src.settings import CURRENT_DIRECTORY
 
@@ -44,7 +44,8 @@ def get_ast_objects_from_file(path):
                 module = ''
 
                 if node.module:
-                    is_relative = node.level and node.level > 0  # level > 0 means that import is relative
+                    # level > 0 means that import is relative
+                    is_relative = node.level and node.level > 0
                     module = node.module.split('.')
 
             for n in node.names:
@@ -85,27 +86,6 @@ def get_ast_objects_from_file(path):
     return imports, class_definitions, function_definitions
 
 
-# TODO: Should be redundant after introducing class_definitions/function_defintions tables
-def get_exports_from_file(path):
-    with open(path, 'r') as file:
-        root = ast.parse(file.read(), path)
-
-    for node in ast.iter_child_nodes(root):
-        if isinstance(node, ast.FunctionDef):
-            yield Export(
-                path,
-                node.name,
-                'function'
-            )
-
-        if isinstance(node, ast.ClassDef):
-            yield Export(
-                path,
-                node.name,
-                'class'
-            )
-
-
 def find_proper_line_for_import(buffer, module_name):
     # TODO: Rework this ? :(
     for line_number, line in enumerate(buffer):
@@ -121,18 +101,13 @@ def get_ast_objects_from_files(paths):
     function_definitions = []
 
     for path in paths:
-        imports_from_file, class_definitions_from_file, function_definitions_from_file = get_ast_objects_from_file(path)
+        imports_from_file, class_definitions_from_file, function_definitions_from_file = get_ast_objects_from_file(path)  # noqa
 
         imports.extend(imports_from_file)
         class_definitions.extend(class_definitions_from_file)
         function_definitions.extend(function_definitions_from_file)
 
     return imports, class_definitions, function_definitions
-
-
-def get_exports_from_files(paths):
-    for path in paths:
-        yield from get_exports_from_file(path)
 
 
 def is_imported_or_defined_in_file(*, stuff_to_import, vim_buffer):

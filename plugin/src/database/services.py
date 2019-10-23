@@ -1,6 +1,6 @@
 from typing import List
 
-from src.common.data_structures import Import, Export, Class, Function
+from src.common.data_structures import Import, Class, Function
 
 from .base import _get_db_connection
 from .constants import DB_TABLES
@@ -25,23 +25,6 @@ def _create_imports_table():
         name TEXT,
         alias TEXT,
         is_relative BOOLEAN
-    )
-    '''
-    return _run_query(create_table_query)
-
-
-def _create_exports_table():
-    drop_table_query = f'''
-    DROP TABLE IF EXISTS {DB_TABLES.EXPORTS}
-    '''
-    _run_query(drop_table_query)
-
-    create_table_query = f'''
-    CREATE TABLE IF NOT EXISTS {DB_TABLES.EXPORTS} (
-        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-        path TEXT,
-        name TEXT,
-        type TEXT
     )
     '''
     return _run_query(create_table_query)
@@ -86,17 +69,23 @@ def setup_database():
 
     # Create tables
     _create_imports_table()
-    _create_exports_table()
     _create_class_definitions_table()
     _create_function_definitions_table()
 
 
-def setup_dictionary(exports: List[Export]):
+def setup_dictionary(classes: List[Class], functions: List[Function]):
     from ..settings import DICTIONARY_PATH
 
+    exports = []
+    for class_obj in classes:
+        exports.append(f'{class_obj.name}\n')
+
+    for function_obj in functions:
+        exports.append(f'{function_obj.name}\n')
+
     with open(DICTIONARY_PATH, 'w') as file:
-        for export in exports:
-            file.write(f'{export.name}\n')
+        for export in sorted(exports):
+            file.write(f'{export}\n')
 
 
 def insert_imports(imports: List[Import]):
@@ -158,22 +147,6 @@ def insert_functions(functions: List[Function]):
     INSERT INTO {DB_TABLES.FUNCTION_DEFINITIONS}
         (FILE_PATH, NAME)
         VALUES {functions_str}
-    '''
-
-    return _run_query(query)
-
-
-def insert_exports(exports: List[Export]):
-    exports_values = [
-        f'("{obj.path}", "{obj.name}", "{obj.type}")'
-        for obj in exports
-    ]
-    exports_str = ', '.join(exports_values)
-
-    query = f'''
-    INSERT INTO {DB_TABLES.EXPORTS}
-        (PATH, NAME, TYPE)
-        VALUES {exports_str}
     '''
 
     return _run_query(query)

@@ -3,7 +3,6 @@ from src.common.vim import Vim
 from src.settings import KNOWLEDGE_DIRECTORY, CURRENT_DIRECTORY
 from src.scraper import (
     extract_ast,
-    extract_all_exports,
     find_proper_line_for_import,
     is_imported_or_defined_in_file
 )
@@ -14,8 +13,6 @@ from src.database import (
     insert_classes,
     insert_functions,
     get_absolute_import_statement,
-    get_export_statement,
-    insert_exports,
     get_class,
     get_function
 )
@@ -38,10 +35,7 @@ def setup():
     if functions:
         insert_functions(functions=functions)
 
-    exports = list(extract_all_exports())
-    insert_exports(exports=exports)
-
-    setup_dictionary(exports=exports)
+    setup_dictionary(classes=classes, functions=functions)
 
 
 def fill_import():
@@ -60,7 +54,9 @@ def fill_import():
         return
 
     # Step 1: Search in the existing imports
-    import_statement = get_absolute_import_statement(obj_to_import=current_word)
+    import_statement = get_absolute_import_statement(
+        obj_to_import=current_word
+    )
 
     if import_statement:
         line_to_insert_import = find_proper_line_for_import(
