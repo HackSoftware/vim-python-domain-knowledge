@@ -4,6 +4,7 @@ from src.common.data_structures import Import, Class, Function
 
 from .base import _get_db_connection
 from .constants import DB_TABLES
+from .selectors import get_all_classes, get_all_functions
 
 
 def _run_query(query: str):
@@ -73,8 +74,10 @@ def setup_database():
     _create_function_definitions_table()
 
 
-def setup_dictionary(classes: List[Class], functions: List[Function]):
+def setup_dictionary():
     from ..settings import DICTIONARY_PATH
+    classes = get_all_classes()
+    functions = get_all_functions()
 
     exports = []
     for class_obj in classes:

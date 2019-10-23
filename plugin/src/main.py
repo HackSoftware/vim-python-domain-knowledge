@@ -39,7 +39,7 @@ def refresh_from_file():
             file_path=vim_buffer.name
         )
 
-    setup_dictionary(classes=classes, functions=functions)
+    setup_dictionary()
 
 
 def setup():
@@ -59,7 +59,7 @@ def setup():
     if functions:
         insert_functions(functions=functions)
 
-    setup_dictionary(classes=classes, functions=functions)
+    setup_dictionary()
 
 
 def fill_import():
