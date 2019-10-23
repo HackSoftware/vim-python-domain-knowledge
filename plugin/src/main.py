@@ -2,19 +2,44 @@ import os
 from src.common.vim import Vim
 from src.settings import KNOWLEDGE_DIRECTORY, CURRENT_DIRECTORY
 from src.scraper import (
-    extract_all_imports,
-    extract_all_exports,
+    extract_ast,
+    get_ast_from_file_content,
     find_proper_line_for_import,
-    is_imported_or_defined_in_file
+    is_imported_or_defined_in_file,
 )
 from src.database import (
     setup_database,
     setup_dictionary,
     insert_imports,
-    get_import_statement,
-    get_export_statement,
-    insert_exports
+    insert_classes,
+    insert_functions,
+    get_absolute_import_statement,
+    get_class,
+    get_function,
+    update_classes_for_file,
+    update_functions_for_file,
 )
+
+
+def refresh_from_file():
+    vim_buffer = Vim.get_current_buffer()
+    file_content = '\n'.join(vim_buffer)
+    imports, classes, functions = get_ast_from_file_content(
+        file_content=file_content,
+        path=vim_buffer.name
+    )
+    # TODO: Update imports probably
+
+    if classes:
+        update_classes_for_file(classes=classes, file_path=vim_buffer.name)
+
+    if functions:
+        update_functions_for_file(
+            functions=functions,
+            file_path=vim_buffer.name
+        )
+
+    setup_dictionary()
 
 
 def setup():
@@ -23,13 +48,18 @@ def setup():
 
     setup_database()
 
-    imports = extract_all_imports()
-    insert_imports(imports=imports)
+    imports, classes, functions = extract_ast()
 
-    exports = list(extract_all_exports())
-    insert_exports(exports=exports)
+    if imports:
+        insert_imports(imports=imports)
 
-    setup_dictionary(exports=exports)
+    if classes:
+        insert_classes(classes=classes)
+
+    if functions:
+        insert_functions(functions=functions)
+
+    setup_dictionary()
 
 
 def fill_import():
@@ -48,7 +78,9 @@ def fill_import():
         return
 
     # Step 1: Search in the existing imports
-    import_statement = get_import_statement(obj_to_import=current_word)
+    import_statement = get_absolute_import_statement(
+        obj_to_import=current_word
+    )
 
     if import_statement:
         line_to_insert_import = find_proper_line_for_import(
@@ -61,10 +93,11 @@ def fill_import():
 
         return
 
-    # Step 2: Search in the existing exportss
-    export_statement = get_export_statement(export_name=current_word)
-    if export_statement:
-        source = export_statement['path']\
+    # Step 2: Search in class definitions
+    class_obj = get_class(class_name=current_word)
+
+    if class_obj:
+        source = class_obj.file_path\
             .replace(CURRENT_DIRECTORY, '')\
             .replace('.py', '')\
             .replace('/', '.')
@@ -81,7 +114,29 @@ def fill_import():
 
         current_buffer.append(import_statement, line_to_insert_import)
         current_window.cursor = (cursor_current_row + 1, cursor_current_col)
+        return
 
+    # Step 3: Search in class definitions
+    function_obj = get_function(function_name=current_word)
+
+    if function_obj:
+        source = function_obj.file_path\
+            .replace(CURRENT_DIRECTORY, '')\
+            .replace('.py', '')\
+            .replace('/', '.')
+
+        if source.startswith('.'):
+            source = source[1:]
+
+        line_to_insert_import = find_proper_line_for_import(
+            buffer=current_buffer,
+            module_name=source
+        )
+
+        import_statement = f'from {source} import {current_word}'
+
+        current_buffer.append(import_statement, line_to_insert_import)
+        current_window.cursor = (cursor_current_row + 1, cursor_current_col)
         return
 
     print(f'Cannot find "{current_word}" export in the project :(')
