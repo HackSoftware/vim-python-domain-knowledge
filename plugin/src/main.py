@@ -3,8 +3,9 @@ from src.common.vim import Vim
 from src.settings import KNOWLEDGE_DIRECTORY, CURRENT_DIRECTORY
 from src.scraper import (
     extract_ast,
+    get_ast_from_file_content,
     find_proper_line_for_import,
-    is_imported_or_defined_in_file
+    is_imported_or_defined_in_file,
 )
 from src.database import (
     setup_database,
@@ -14,8 +15,31 @@ from src.database import (
     insert_functions,
     get_absolute_import_statement,
     get_class,
-    get_function
+    get_function,
+    update_classes_for_file,
+    update_functions_for_file,
 )
+
+
+def refresh_from_file():
+    vim_buffer = Vim.get_current_buffer()
+    file_content = '\n'.join(vim_buffer)
+    imports, classes, functions = get_ast_from_file_content(
+        file_content=file_content,
+        path=vim_buffer.name
+    )
+    # TODO: Update imports probably
+
+    if classes:
+        update_classes_for_file(classes=classes, file_path=vim_buffer.name)
+
+    if functions:
+        update_functions_for_file(
+            functions=functions,
+            file_path=vim_buffer.name
+        )
+
+    setup_dictionary(classes=classes, functions=functions)
 
 
 def setup():

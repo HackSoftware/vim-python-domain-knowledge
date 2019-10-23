@@ -20,9 +20,8 @@ def find_all_files():
     return result
 
 
-def get_ast_objects_from_file(path):
-    with open(path, 'r') as file:
-        root = ast.parse(file.read(), path)
+def get_ast_from_file_content(file_content, path):
+    root = ast.parse(file_content)
 
     imports = []
     class_definitions = []
@@ -84,6 +83,11 @@ def get_ast_objects_from_file(path):
             )
 
     return imports, class_definitions, function_definitions
+
+
+def get_ast_objects_from_file(path):
+    with open(path, 'r') as file:
+        return get_ast_from_file_content(file_content=file.read(), path=path)
 
 
 def find_proper_line_for_import(buffer, module_name):

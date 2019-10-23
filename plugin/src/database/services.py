@@ -150,3 +150,31 @@ def insert_functions(functions: List[Function]):
     '''
 
     return _run_query(query)
+
+
+def delete_classes_for_file(file_path):
+    query = f'''
+    DELETE FROM {DB_TABLES.CLASS_DEFINITIONS}
+        WHERE FILE_PATH = "{file_path}"
+    '''
+
+    return _run_query(query)
+
+
+def delete_functions_for_file(file_path):
+    query = f'''
+    DELETE FROM {DB_TABLES.FUNCTION_DEFINITIONS}
+        WHERE FILE_PATH = "{file_path}"
+    '''
+
+    return _run_query(query)
+
+
+def update_classes_for_file(classes: List[Class], file_path):
+    delete_classes_for_file(file_path=file_path)
+    insert_classes(classes=classes)
+
+
+def update_functions_for_file(functions: List[Function], file_path):
+    delete_functions_for_file(file_path=file_path)
+    insert_functions(functions=functions)
