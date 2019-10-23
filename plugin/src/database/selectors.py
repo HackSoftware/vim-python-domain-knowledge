@@ -1,5 +1,6 @@
 from .base import _get_db_connection
 from .constants import DB_TABLES
+from src.common.data_structures import Class, Function
 
 
 def get_absolute_import_statement(obj_to_import: str):
@@ -52,3 +53,41 @@ def get_export_statement(export_name: str):
             'path': result[0],
             'name': result[1]
         }
+
+
+def get_class(class_name: str):
+    connection = _get_db_connection()
+    cursor = connection.cursor()
+
+    cursor.execute(
+        f'''
+        SELECT file_path, name, parents
+            FROM {DB_TABLES.CLASS_DEFINITIONS}
+            WHERE name=?
+        ''',
+        (class_name, )
+    )
+
+    result = cursor.fetchone()
+
+    if result:
+        return Class(*result)
+
+
+def get_function(function_name: str):
+    connection = _get_db_connection()
+    cursor = connection.cursor()
+
+    cursor.execute(
+        f'''
+        SELECT file_path, name
+            FROM {DB_TABLES.FUNCTION_DEFINITIONS}
+            WHERE name=?
+        ''',
+        (function_name, )
+    )
+
+    result = cursor.fetchone()
+
+    if result:
+        return Function(*result)

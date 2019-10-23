@@ -15,7 +15,9 @@ from src.database import (
     insert_functions,
     get_absolute_import_statement,
     get_export_statement,
-    insert_exports
+    insert_exports,
+    get_class,
+    get_function
 )
 
 
@@ -71,10 +73,11 @@ def fill_import():
 
         return
 
-    # Step 2: Search in the existing exportss
-    export_statement = get_export_statement(export_name=current_word)
-    if export_statement:
-        source = export_statement['path']\
+    # Step 2: Search in class definitions
+    class_obj = get_class(class_name=current_word)
+
+    if class_obj:
+        source = class_obj.file_path\
             .replace(CURRENT_DIRECTORY, '')\
             .replace('.py', '')\
             .replace('/', '.')
@@ -91,7 +94,29 @@ def fill_import():
 
         current_buffer.append(import_statement, line_to_insert_import)
         current_window.cursor = (cursor_current_row + 1, cursor_current_col)
+        return
 
+    # Step 3: Search in class definitions
+    function_obj = get_function(function_name=current_word)
+
+    if function_obj:
+        source = function_obj.file_path\
+            .replace(CURRENT_DIRECTORY, '')\
+            .replace('.py', '')\
+            .replace('/', '.')
+
+        if source.startswith('.'):
+            source = source[1:]
+
+        line_to_insert_import = find_proper_line_for_import(
+            buffer=current_buffer,
+            module_name=source
+        )
+
+        import_statement = f'from {source} import {current_word}'
+
+        current_buffer.append(import_statement, line_to_insert_import)
+        current_window.cursor = (cursor_current_row + 1, cursor_current_col)
         return
 
     print(f'Cannot find "{current_word}" export in the project :(')
