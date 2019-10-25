@@ -28,7 +28,7 @@ def refresh_from_file():
         file_content=file_content,
         path=vim_buffer.name
     )
-    # TODO: Update imports probably
+    # TODO: Update imports probably?
 
     if classes:
         update_classes_for_file(classes=classes, file_path=vim_buffer.name)
