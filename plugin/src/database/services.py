@@ -76,6 +76,20 @@ def setup_database():
     _create_function_definitions_table()
 
 
+def get_autocomletion_options():
+    classes = get_all_classes()
+    functions = get_all_functions()
+
+    exports = []
+    for class_obj in classes:
+        exports.append([class_obj.name, class_obj.module])
+
+    for function_obj in functions:
+        exports.append([function_obj.name, function_obj.module])
+
+    return sorted(exports)
+
+
 def setup_dictionary():
     from ..settings import DICTIONARY_PATH
     classes = get_all_classes()

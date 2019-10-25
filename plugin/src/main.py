@@ -18,6 +18,7 @@ from src.database import (
     get_function,
     update_classes_for_file,
     update_functions_for_file,
+    get_autocomletion_options,
 )
 from src.ast.utils import (
     ast_import_to_lines_str,
@@ -157,3 +158,7 @@ def fill_import():
         return
 
     print(f'Cannot find "{current_word}" export in the project :(')
+
+
+def get_autocompletions_options_func():
+    return get_autocomletion_options()
