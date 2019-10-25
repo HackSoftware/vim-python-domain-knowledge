@@ -66,15 +66,6 @@ def get_ast_objects_from_file(path):
         return get_ast_from_file_content(file_content=file.read(), path=path)
 
 
-def find_proper_line_for_import(buffer, module_name):
-    # TODO: Rework this ? :(
-    for line_number, line in enumerate(buffer):
-        if module_name in line:
-            return line_number
-
-    return 0
-
-
 def get_ast_objects_from_files(paths):
     imports = []
     class_definitions = []
