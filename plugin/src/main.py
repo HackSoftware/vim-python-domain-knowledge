@@ -1,5 +1,6 @@
 import os
 from src.common.vim import Vim
+from src.common.utils import get_import_str_from_import_obj
 from src.settings import KNOWLEDGE_DIRECTORY
 from src.scraper import (
     extract_ast,
@@ -18,6 +19,11 @@ from src.database import (
     get_function,
     update_classes_for_file,
     update_functions_for_file,
+)
+from src.ast.utils import (
+    ast_import_to_lines_str,
+    should_be_added_to_import,
+    get_modified_imports_and_lines_to_replace,
 )
 
 
@@ -66,6 +72,7 @@ def fill_import():
     current_word = Vim.eval('expand("<cword>")')
 
     current_buffer = Vim.get_current_buffer()
+    file_content = '\n'.join(current_buffer)
 
     already_imported = is_imported_or_defined_in_file(
         stuff_to_import=current_word,
@@ -76,19 +83,39 @@ def fill_import():
         print(f'"{current_word}" is already visible in file scope')
         return
 
+    import_to_modify = should_be_added_to_import(
+        file_content=file_content,
+        import_name=current_word,
+        file_path=current_buffer.name
+    )
+
+    if import_to_modify:
+        ast_import, start_line, end_line = get_modified_imports_and_lines_to_replace(
+            file_content=file_content,
+            ast_import=import_to_modify,
+            import_name=current_word
+        )
+
+        if ast_import:
+            import_str = ast_import_to_lines_str(ast_import=ast_import)
+            current_buffer[start_line-1:end_line] = import_str
+            return
+
     # Step 1: Search in the existing imports
-    import_statement = get_absolute_import_statement(
+    import_obj = get_absolute_import_statement(
         obj_to_import=current_word
     )
 
-    if import_statement:
+    if import_obj:
         line_to_insert_import = find_proper_line_for_import(
             buffer=current_buffer,
-            module_name=import_statement['module']
+            module_name=import_obj.module
         )
 
+        import_statement = get_import_str_from_import_obj(import_obj=import_obj)
+
         Vim.insert_at_line(
-            import_statement=import_statement['raw'],
+            import_statement=import_statement,
             line=line_to_insert_import
         )
         return

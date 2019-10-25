@@ -1,4 +1,43 @@
+from typing import Optional, Union, List
+from copy import deepcopy
+import math
+
 import ast
+
+from src.common.data_structures import Import, Class, Function
+from src.common.utils import (
+    get_python_module_str_from_filepath,
+    before_first_blank_line_after_line_or_end_line,
+)
+from src.database.selectors import get_distinct_modules
+
+
+def is_ast_import(el) -> bool:
+    return isinstance(el, ast.Import)
+
+
+def is_ast_import_from(el) -> bool:
+    return isinstance(el, ast.ImportFrom)
+
+
+def is_ast_class_def(el) -> bool:
+    return isinstance(el, ast.ClassDef)
+
+
+def is_ast_function_def(el) -> bool:
+    return isinstance(el, ast.FunctionDef)
+
+
+def is_ast_name(el) -> bool:
+    return isinstance(el, ast.Name)
+
+
+def is_ast_attribute(el) -> bool:
+    return isinstance(el, ast.Attribute)
+
+
+def is_ast_assign(el) -> bool:
+    return isinstance(el, ast.Assign)
 
 
 def ast_parse_file_content(file_content):
@@ -15,3 +54,178 @@ def get_ast_nodes_from_file_content(file_content):
             return list(ast.iter_child_nodes(ast_root))
         except Exception:
             return []
+    return []
+
+
+def ast_class_to_class_obj(ast_class: ast.ClassDef, file_path: str) -> Class:
+    parents = []
+    for base in getattr(ast_class, 'bases', []):
+        if is_ast_name(base):
+            parents.append(base.id)
+
+        if is_ast_attribute(base):
+            parents.append(base.attr)
+
+    return Class(
+        file_path=file_path,
+        name=ast_class.name,
+        parents=parents,
+        module=get_python_module_str_from_filepath(file_path)
+    )
+
+
+def ast_function_to_function_obj(ast_function: ast.FunctionDef, file_path: str) -> Function:
+    return Function(
+        file_path=file_path,
+        name=ast_function.name,
+        module=get_python_module_str_from_filepath(file_path)
+    )
+
+
+def ast_import_and_import_from_to_import_objects(
+    ast_import: Union[ast.Import, ast.ImportFrom],
+    file_path
+) -> List[Import]:
+    is_import = is_ast_import(ast_import)
+    is_import_from = is_ast_import_from(ast_import)
+
+    if is_import:
+        module = []
+
+    is_relative = False
+
+    if is_import_from:
+        module = ''
+
+        if ast_import.module:
+            # level > 0 means that import is relative
+            is_relative = ast_import.level and ast_import.level > 0
+            module = ast_import.module.split('.')
+
+    return [
+        Import(
+            module=module,
+            name=el.name.split('.'),
+            alias=el.asname,
+            is_relative=is_relative
+        )
+        for el in ast_import.names
+    ]
+
+
+def should_be_added_to_import(
+    file_content: str,
+    import_name: str,
+    file_path: str
+) -> Optional[Union[ast.Import, ast.ImportFrom]]:
+    """
+    Returns the ast import in file that the "import_name" should be added to
+
+    TODO: Think of a better name for this function?
+    """
+    nodes = get_ast_nodes_from_file_content(file_content=file_content)
+    found_import_modules = get_distinct_modules(
+        import_name=import_name
+    )
+
+    for node in nodes:
+        if is_ast_import(node) or is_ast_import_from(node):
+            import_objects = ast_import_and_import_from_to_import_objects(
+                ast_import=node,
+                file_path=file_path
+            )
+
+            matches = [
+                '.'.join(import_obj.module) in found_import_modules  # Revisit that join
+                for import_obj in import_objects
+            ]
+
+            if any(matches):
+                return node
+
+
+def get_modified_import(
+    ast_import: Union[ast.Import, ast.ImportFrom],
+    import_name: str
+) -> Union[ast.Import, ast.ImportFrom]:
+    modified_import = deepcopy(ast_import)
+    modified_import.names.append(
+        ast.alias(
+            name=import_name,
+            asname=None
+        )
+    )
+    return modified_import
+
+
+def are_imports_equal(
+    imp1: Union[ast.Import, ast.ImportFrom],
+    imp2: Union[ast.Import, ast.ImportFrom]
+) -> bool:
+    # imp1 and imp2 should be from the same file
+    # Compare types just for sanity check
+    if type(imp1) != type(imp2):
+        return False
+
+    return imp1.lineno == imp2.lineno
+
+
+def get_modified_imports_and_lines_to_replace(
+    file_content: str,
+    ast_import: ast.Import,
+    import_name: str
+):
+    start_line = ast_import.lineno
+    end_line = None
+    modified_import = get_modified_import(
+        ast_import=ast_import,
+        import_name=import_name
+    )
+
+    nodes = get_ast_nodes_from_file_content(file_content=file_content)
+
+    nodes_count = len(nodes)
+
+    for idx, node in enumerate(nodes):
+        if is_ast_import(node) or is_ast_import_from(node):
+            if are_imports_equal(node, ast_import):
+                before_first_blank_line_after_the_node_or_end_line = before_first_blank_line_after_line_or_end_line(
+                    file_content=file_content,
+                    lineno=node.lineno
+                )
+                next_node_lineno = math.inf  # will be ignored if it's last node
+
+                if idx < nodes_count:
+                    next_node_lineno = nodes[idx + 1].lineno
+
+                end_line = min(
+                    next_node_lineno,
+                    before_first_blank_line_after_the_node_or_end_line
+                ) - 1
+
+                return modified_import, start_line, end_line
+
+    return None, None, None
+
+
+def ast_import_to_lines_str(ast_import: ast.ImportFrom) -> List[str]:
+    names = []
+
+    for name in ast_import.names:
+        if name.asname:
+            names.append(f'{name.name} as {name.asname}')
+        else:
+            names.append(f'{name.name}')
+
+    names_str = ', '.join(names)
+
+    one_line_import = f'from {ast_import.module} import {names_str}'
+
+    if len(one_line_import) <= 80:
+        return [one_line_import, '']
+
+    return [
+        f'from {ast_import.module} import (',
+        *[f'    {name},' for name in names],
+        ')',
+    ]
