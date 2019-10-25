@@ -2,16 +2,16 @@ from typing import Optional
 
 from .base import _get_db_connection
 from .constants import DB_TABLES
-from src.common.data_structures import Class, Function
+from src.common.data_structures import Class, Function, Import
 
 
-def get_absolute_import_statement(obj_to_import: str):
+def get_absolute_import_statement(obj_to_import: str) -> Import:
     connection = _get_db_connection()
     cursor = connection.cursor()
 
     cursor.execute(
         f'''
-        SELECT module, name
+        SELECT module, name, alias, is_relative
             FROM {DB_TABLES.IMPORTS}
             WHERE name=? and is_relative=0
             GROUP BY module
@@ -23,16 +23,7 @@ def get_absolute_import_statement(obj_to_import: str):
     result = cursor.fetchone()
 
     if result:
-        if result[0]:
-            return {
-                'raw': f'from {result[0]} import {result[1]}',
-                'module': result[0]
-            }
-
-        return {
-            'raw': f'import {result[1]}',
-            'module': result[1]
-        }
+        return Import(*result)
 
 
 def get_all_classes():

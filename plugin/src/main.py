@@ -1,5 +1,6 @@
 import os
 from src.common.vim import Vim
+from src.common.utils import get_import_str_from_import_obj
 from src.settings import KNOWLEDGE_DIRECTORY
 from src.scraper import (
     extract_ast,
@@ -77,18 +78,19 @@ def fill_import():
         return
 
     # Step 1: Search in the existing imports
-    import_statement = get_absolute_import_statement(
+    import_obj = get_absolute_import_statement(
         obj_to_import=current_word
     )
 
-    if import_statement:
+    if import_obj:
         line_to_insert_import = find_proper_line_for_import(
             buffer=current_buffer,
-            module_name=import_statement['module']
+            module_name=import_obj.module
         )
+        import_statement = get_import_str_from_import_obj(import_obj=import_obj)
 
         Vim.insert_at_line(
-            import_statement=import_statement['raw'],
+            import_statement=import_statement,
             line=line_to_insert_import
         )
         return
