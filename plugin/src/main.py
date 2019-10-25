@@ -20,7 +20,11 @@ from src.database import (
     update_classes_for_file,
     update_functions_for_file,
 )
-from src.ast.utils import should_be_added_to_import
+from src.ast.utils import (
+    ast_import_to_lines_str,
+    should_be_added_to_import,
+    get_modified_imports_and_lines_to_replace,
+)
 
 
 def refresh_from_file():
@@ -84,8 +88,17 @@ def fill_import():
         import_name=current_word,
         file_path=current_buffer.name
     )
-    print(import_to_modify)
-    # TODO: Modify import
+    if import_to_modify:
+        ast_import, start_line, end_line = get_modified_imports_and_lines_to_replace(
+            file_content=file_content,
+            ast_import=import_to_modify,
+            import_name=current_word
+        )
+
+        if ast_import:
+            import_str = ast_import_to_lines_str(ast_import=ast_import)
+            current_buffer[start_line-1:end_line-1] = import_str
+            return
 
     # Step 1: Search in the existing imports
     import_obj = get_absolute_import_statement(

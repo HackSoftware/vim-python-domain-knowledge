@@ -1,9 +1,13 @@
 from typing import Optional, Union, List
+from copy import deepcopy
 
 import ast
 
 from src.common.data_structures import Import, Class, Function
-from src.common.utils import get_python_module_str_from_filepath
+from src.common.utils import (
+    get_python_module_str_from_filepath,
+    before_first_blank_line_after_line_or_end_line,
+)
 from src.database.selectors import get_distinct_modules
 
 
@@ -137,3 +141,90 @@ def should_be_added_to_import(
 
             if any(matches):
                 return node
+
+
+def get_modified_import(
+    ast_import: Union[ast.Import, ast.ImportFrom],
+    import_name: str
+) -> Union[ast.Import, ast.ImportFrom]:
+    modified_import = deepcopy(ast_import)
+    modified_import.names.append(
+        ast.alias(
+            name=import_name,
+            asname=None
+        )
+    )
+    return modified_import
+
+
+def are_imports_equal(
+    imp1: Union[ast.Import, ast.ImportFrom],
+    imp2: Union[ast.Import, ast.ImportFrom]
+) -> bool:
+    # imp1 and imp2 should be from the same file
+    # Compare types just for sanity check
+    if type(imp1) != type(imp2):
+        return False
+
+    return imp1.lineno == imp2.lineno
+
+
+def get_modified_imports_and_lines_to_replace(
+    file_content: str,
+    ast_import: ast.Import,
+    import_name: str
+):
+    start_line = ast_import.lineno
+    end_line = None
+    modified_import = get_modified_import(
+        ast_import=ast_import,
+        import_name=import_name
+    )
+
+    nodes = get_ast_nodes_from_file_content(file_content=file_content)
+
+    nodes_count = len(nodes)
+
+    for idx, node in enumerate(nodes):
+        if is_ast_import(node) or is_ast_import_from(node):
+            if are_imports_equal(node, ast_import):
+                before_first_blank_line_after_the_node_or_end_line = before_first_blank_line_after_line_or_end_line(
+                    file_content=file_content,
+                    lineno=node.lineno
+                )
+                next_node_lineno = -1  # will be ignored if it's last node
+
+                if idx < nodes_count:
+                    next_node_lineno = nodes[idx + 1].lineno
+
+                end_line = min(
+                    next_node_lineno - 1,
+                    before_first_blank_line_after_the_node_or_end_line + 1
+                )
+
+                return modified_import, start_line, end_line
+
+    return None, None, None
+
+
+def ast_import_to_lines_str(ast_import: ast.ImportFrom) -> List[str]:
+    names = []
+
+    for name in ast_import.names:
+        if name.asname:
+            names.append(f'{name.name} as {name.asname}')
+        else:
+            names.append(f'{name.name}')
+
+    names_str = ', '.join(names)
+
+    one_line_import = f'from {ast_import.module} import {names_str}'
+
+    if len(one_line_import) <= 80:
+        return [one_line_import]
+
+    return [
+        f'from {ast_import.module} import (',
+        *[f'    {name},' for name in names],
+        ')'
+    ]

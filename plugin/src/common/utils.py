@@ -25,3 +25,17 @@ def get_import_str_from_import_obj(import_obj: Import) -> str:
         return f'import {name} as {alias}'
 
     return f'import {name}'
+
+
+def before_first_blank_line_after_line_or_end_line(file_content: str, lineno: int) -> str:
+    lines = file_content.split('\n')
+    blank_lines_numbers_after_lineno = [
+        idx + 1 for idx,
+        line in enumerate(lines)
+        if idx > int(lineno) and line == ''
+    ]
+
+    if blank_lines_numbers_after_lineno:
+        return blank_lines_numbers_after_lineno[0] - 1
+
+    return len(lines) - 1
