@@ -2,6 +2,7 @@ import os
 import ast
 
 from src.common.data_structures import Import, Class, Function
+from src.common.utils import get_python_module_str_from_filepath
 
 from src.settings import CURRENT_DIRECTORY
 
@@ -70,7 +71,8 @@ def get_ast_from_file_content(file_content, path):
                 Class(
                     file_path=path,
                     name=node.name,
-                    parents=parents
+                    parents=parents,
+                    module=get_python_module_str_from_filepath(path)
                 )
             )
 
@@ -78,7 +80,8 @@ def get_ast_from_file_content(file_content, path):
             function_definitions.append(
                 Function(
                     file_path=path,
-                    name=node.name
+                    name=node.name,
+                    module=get_python_module_str_from_filepath(path)
                 )
             )
 

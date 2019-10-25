@@ -42,7 +42,8 @@ def _create_class_definitions_table():
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         file_path TEXT,
         name TEXT,
-        parents TEXT
+        parents TEXT,
+        module TEXT
     )
     '''
     return _run_query(create_table_query)
@@ -58,7 +59,8 @@ def _create_function_definitions_table():
     CREATE TABLE IF NOT EXISTS {DB_TABLES.FUNCTION_DEFINITIONS} (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         file_path TEXT,
-        name TEXT
+        name TEXT,
+        module TEXT
     )
     '''
     return _run_query(create_table_query)
@@ -120,16 +122,19 @@ def insert_classes(classes: List[Class]):
 
     for class_obj in classes:
         parents_str = ','.join(class_obj.parents)
+        file_path = class_obj.file_path
+        name = class_obj.name
+        module = class_obj.module
 
         classes_values.append(
-            f'("{class_obj.file_path}", "{class_obj.name}", "{parents_str}")'
+            f'("{file_path}", "{name}", "{parents_str}", "{module}")'
         )
 
     classes_str = ', '.join(classes_values)
 
     query = f'''
     INSERT INTO {DB_TABLES.CLASS_DEFINITIONS}
-        (FILE_PATH, NAME, PARENTS)
+        (FILE_PATH, NAME, PARENTS, MODULE)
         VALUES {classes_str}
     '''
 
@@ -140,15 +145,19 @@ def insert_functions(functions: List[Function]):
     functions_values = []
 
     for function_obj in functions:
+        file_path = function_obj.file_path
+        name = function_obj.name
+        module = function_obj.module
+
         functions_values.append(
-            f'("{function_obj.file_path}", "{function_obj.name}")'
+            f'("{file_path}", "{name}", "{module}")'
         )
 
     functions_str = ', '.join(functions_values)
 
     query = f'''
     INSERT INTO {DB_TABLES.FUNCTION_DEFINITIONS}
-        (FILE_PATH, NAME)
+        (FILE_PATH, NAME, MODULE)
         VALUES {functions_str}
     '''
 

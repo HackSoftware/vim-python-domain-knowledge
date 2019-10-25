@@ -39,7 +39,7 @@ def get_all_classes():
 
     cursor.execute(
         f'''
-        SELECT file_path, name, parents
+        SELECT file_path, name, parents, module
             FROM {DB_TABLES.CLASS_DEFINITIONS}
         ''',
     )
@@ -58,7 +58,7 @@ def get_all_functions():
 
     cursor.execute(
         f'''
-        SELECT file_path, name
+        SELECT file_path, name, module
             FROM {DB_TABLES.FUNCTION_DEFINITIONS}
         ''',
     )
@@ -77,7 +77,7 @@ def get_class(class_name: str):
 
     cursor.execute(
         f'''
-        SELECT file_path, name, parents
+        SELECT file_path, name, parents, module
             FROM {DB_TABLES.CLASS_DEFINITIONS}
             WHERE name=?
         ''',
@@ -96,7 +96,7 @@ def get_function(function_name: str):
 
     cursor.execute(
         f'''
-        SELECT file_path, name
+        SELECT file_path, name, module
             FROM {DB_TABLES.FUNCTION_DEFINITIONS}
             WHERE name=?
         ''',
