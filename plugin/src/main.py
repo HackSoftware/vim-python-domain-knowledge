@@ -87,6 +87,7 @@ def fill_import():
             buffer=current_buffer,
             module_name=import_obj.module
         )
+
         import_statement = get_import_str_from_import_obj(import_obj=import_obj)
 
         Vim.insert_at_line(

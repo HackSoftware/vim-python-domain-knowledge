@@ -1,7 +1,15 @@
 import os
-import ast
 
-from src.ast.utils import get_ast_nodes_from_file_content
+from src.ast.utils import (
+    get_ast_nodes_from_file_content,
+    is_ast_import,
+    is_ast_import_from,
+    is_ast_class_def,
+    is_ast_function_def,
+    is_ast_name,
+    is_ast_attribute,
+    is_ast_assign,
+)
 from src.common.data_structures import Import, Class, Function
 from src.common.utils import get_python_module_str_from_filepath
 
@@ -30,10 +38,10 @@ def get_ast_from_file_content(file_content, path):
     nodes = get_ast_nodes_from_file_content(file_content)
 
     for node in nodes:
-        is_import = isinstance(node, ast.Import)
-        is_import_from = isinstance(node, ast.ImportFrom)
-        is_class = isinstance(node, ast.ClassDef)
-        is_function = isinstance(node, ast.FunctionDef)
+        is_import = is_ast_import(node)
+        is_import_from = is_ast_import_from(node)
+        is_class = is_ast_class_def(node)
+        is_function = is_ast_function_def(node)
 
         if is_import or is_import_from:
             if is_import:
@@ -62,10 +70,10 @@ def get_ast_from_file_content(file_content, path):
         if is_class:
             parents = []
             for base in getattr(node, 'bases', []):
-                if isinstance(base, ast.Name):
+                if is_ast_name(base):
                     parents.append(base.id)
 
-                if isinstance(base, ast.Attribute):
+                if is_ast_attribute(base):
                     parents.append(base.attr)
 
             class_definitions.append(
@@ -127,15 +135,15 @@ def is_imported_or_defined_in_file(*, stuff_to_import, vim_buffer):
     nodes = get_ast_nodes_from_file_content(file_content)
 
     for node in nodes:
-        if isinstance(node, ast.Import) or isinstance(node, ast.ImportFrom):
+        if is_ast_import(node) or is_ast_import_from(node):
             if stuff_to_import in [el.name for el in node.names]:
                 return True
 
-        if isinstance(node, ast.FunctionDef) or isinstance(node, ast.ClassDef):
+        if is_ast_function_def(node) or is_ast_class_def(node):
             if node.name == stuff_to_import:
                 return True
 
-        if isinstance(node, ast.Assign):
+        if is_ast_assign(node):
             if stuff_to_import in [el.id for el in node.targets]:
                 return True
 
