@@ -1,5 +1,6 @@
 from typing import Optional, Union, List
 from copy import deepcopy
+import math
 
 import ast
 
@@ -192,15 +193,15 @@ def get_modified_imports_and_lines_to_replace(
                     file_content=file_content,
                     lineno=node.lineno
                 )
-                next_node_lineno = -1  # will be ignored if it's last node
+                next_node_lineno = math.inf  # will be ignored if it's last node
 
                 if idx < nodes_count:
                     next_node_lineno = nodes[idx + 1].lineno
 
                 end_line = min(
-                    next_node_lineno - 1,
-                    before_first_blank_line_after_the_node_or_end_line + 1
-                )
+                    next_node_lineno,
+                    before_first_blank_line_after_the_node_or_end_line
+                ) - 1
 
                 return modified_import, start_line, end_line
 
@@ -221,10 +222,10 @@ def ast_import_to_lines_str(ast_import: ast.ImportFrom) -> List[str]:
     one_line_import = f'from {ast_import.module} import {names_str}'
 
     if len(one_line_import) <= 80:
-        return [one_line_import]
+        return [one_line_import, '']
 
     return [
         f'from {ast_import.module} import (',
         *[f'    {name},' for name in names],
-        ')'
+        ')',
     ]

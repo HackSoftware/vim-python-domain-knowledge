@@ -88,6 +88,7 @@ def fill_import():
         import_name=current_word,
         file_path=current_buffer.name
     )
+
     if import_to_modify:
         ast_import, start_line, end_line = get_modified_imports_and_lines_to_replace(
             file_content=file_content,
@@ -97,7 +98,7 @@ def fill_import():
 
         if ast_import:
             import_str = ast_import_to_lines_str(ast_import=ast_import)
-            current_buffer[start_line-1:end_line-1] = import_str
+            current_buffer[start_line-1:end_line] = import_str
             return
 
     # Step 1: Search in the existing imports

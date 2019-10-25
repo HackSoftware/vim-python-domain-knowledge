@@ -36,6 +36,6 @@ def before_first_blank_line_after_line_or_end_line(file_content: str, lineno: in
     ]
 
     if blank_lines_numbers_after_lineno:
-        return blank_lines_numbers_after_lineno[0] - 1
+        return blank_lines_numbers_after_lineno[0]
 
     return len(lines) - 1
