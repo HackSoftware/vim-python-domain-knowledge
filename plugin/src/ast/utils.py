@@ -1,8 +1,9 @@
-from typing import Optional, Union
+from typing import Optional, Union, List
 
 import ast
 
-from src.common.data_structures import Import
+from src.common.data_structures import Import, Class, Function
+from src.common.utils import get_python_module_str_from_filepath
 
 
 def is_ast_import(el) -> bool:
@@ -50,7 +51,68 @@ def get_ast_nodes_from_file_content(file_content):
     return []
 
 
+def ast_class_to_class_obj(ast_class: ast.ClassDef, file_path: str) -> Class:
+    parents = []
+    for base in getattr(ast_class, 'bases', []):
+        if is_ast_name(base):
+            parents.append(base.id)
+
+        if is_ast_attribute(base):
+            parents.append(base.attr)
+
+    return Class(
+        file_path=file_path,
+        name=ast_class.name,
+        parents=parents,
+        module=get_python_module_str_from_filepath(file_path)
+    )
+
+
+def ast_function_to_function_obj(ast_function: ast.FunctionDef, file_path: str) -> Function:
+    return Function(
+        file_path=file_path,
+        name=ast_function.name,
+        module=get_python_module_str_from_filepath(file_path)
+    )
+
+
+def ast_import_and_import_from_to_import_objects(
+    ast_import: Union[ast.Import, ast.ImportFrom],
+    file_path
+) -> List[Import]:
+    is_import = is_ast_import(ast_import)
+    is_import_from = is_ast_import_from(ast_import)
+
+    if is_import:
+        module = []
+
+    is_relative = False
+
+    if is_import_from:
+        module = ''
+
+        if ast_import.module:
+            # level > 0 means that import is relative
+            is_relative = ast_import.level and ast_import.level > 0
+            module = ast_import.module.split('.')
+
+    return [
+        Import(
+            module=module,
+            name=el.name.split('.'),
+            alias=el.asname,
+            is_relative=is_relative
+        )
+        for el in ast_import.names
+    ]
+
+
 def should_be_added_to_import(file_content: str, import_obj: Import) -> Optional[Union[ast.Import, ast.ImportFrom]]:
     nodes = get_ast_nodes_from_file_content(file_content=file_content)
+
     for node in nodes:
-        pass
+        if is_ast_import(node):
+            pass
+
+        if is_ast_import_from(node):
+            pass

@@ -6,12 +6,11 @@ from src.ast.utils import (
     is_ast_import_from,
     is_ast_class_def,
     is_ast_function_def,
-    is_ast_name,
-    is_ast_attribute,
     is_ast_assign,
+    ast_class_to_class_obj,
+    ast_function_to_function_obj,
+    ast_import_and_import_from_to_import_objects,
 )
-from src.common.data_structures import Import, Class, Function
-from src.common.utils import get_python_module_str_from_filepath
 
 from src.settings import CURRENT_DIRECTORY
 
@@ -44,55 +43,20 @@ def get_ast_from_file_content(file_content, path):
         is_function = is_ast_function_def(node)
 
         if is_import or is_import_from:
-            if is_import:
-                module = []
+            import_objects = ast_import_and_import_from_to_import_objects(
+                ast_import=node,
+                file_path=path
+            )
 
-            is_relative = False
-
-            if is_import_from:
-                module = ''
-
-                if node.module:
-                    # level > 0 means that import is relative
-                    is_relative = node.level and node.level > 0
-                    module = node.module.split('.')
-
-            for n in node.names:
-                imports.append(
-                    Import(
-                        module=module,
-                        name=n.name.split('.'),
-                        alias=n.asname,
-                        is_relative=is_relative
-                    )
-                )
+            imports.extend(import_objects)
 
         if is_class:
-            parents = []
-            for base in getattr(node, 'bases', []):
-                if is_ast_name(base):
-                    parents.append(base.id)
-
-                if is_ast_attribute(base):
-                    parents.append(base.attr)
-
-            class_definitions.append(
-                Class(
-                    file_path=path,
-                    name=node.name,
-                    parents=parents,
-                    module=get_python_module_str_from_filepath(path)
-                )
-            )
+            class_obj = ast_class_to_class_obj(ast_class=node, file_path=path)
+            class_definitions.append(class_obj)
 
         if is_function:
-            function_definitions.append(
-                Function(
-                    file_path=path,
-                    name=node.name,
-                    module=get_python_module_str_from_filepath(path)
-                )
-            )
+            function_obj = ast_function_to_function_obj(ast_function=node, file_path=path)
+            function_definitions.append(function_obj)
 
     return imports, class_definitions, function_definitions
 
