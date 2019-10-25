@@ -1,6 +1,7 @@
 import os
 import ast
 
+from src.ast.utils import get_ast_nodes_from_file_content
 from src.common.data_structures import Import, Class, Function
 from src.common.utils import get_python_module_str_from_filepath
 
@@ -22,13 +23,13 @@ def find_all_files():
 
 
 def get_ast_from_file_content(file_content, path):
-    root = ast.parse(file_content)
-
     imports = []
     class_definitions = []
     function_definitions = []
 
-    for node in ast.iter_child_nodes(root):
+    nodes = get_ast_nodes_from_file_content(file_content)
+
+    for node in nodes:
         is_import = isinstance(node, ast.Import)
         is_import_from = isinstance(node, ast.ImportFrom)
         is_class = isinstance(node, ast.ClassDef)
@@ -123,9 +124,9 @@ def is_imported_or_defined_in_file(*, stuff_to_import, vim_buffer):
     if stuff_to_import not in file_content:
         return False
 
-    module = ast.parse(file_content)
+    nodes = get_ast_nodes_from_file_content(file_content)
 
-    for node in ast.iter_child_nodes(module):
+    for node in nodes:
         if isinstance(node, ast.Import) or isinstance(node, ast.ImportFrom):
             if stuff_to_import in [el.name for el in node.names]:
                 return True
