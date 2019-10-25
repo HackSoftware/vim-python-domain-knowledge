@@ -1,3 +1,5 @@
+from typing import Optional
+
 from .base import _get_db_connection
 from .constants import DB_TABLES
 from src.common.data_structures import Class, Function
@@ -71,7 +73,7 @@ def get_all_functions():
     ]
 
 
-def get_class(class_name: str):
+def get_class(class_name: str) -> Optional[Class]:
     connection = _get_db_connection()
     cursor = connection.cursor()
 
@@ -90,7 +92,7 @@ def get_class(class_name: str):
         return Class(*result)
 
 
-def get_function(function_name: str):
+def get_function(function_name: str) -> Optional[Function]:
     connection = _get_db_connection()
     cursor = connection.cursor()
 

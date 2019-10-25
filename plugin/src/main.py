@@ -1,6 +1,6 @@
 import os
 from src.common.vim import Vim
-from src.settings import KNOWLEDGE_DIRECTORY, CURRENT_DIRECTORY
+from src.settings import KNOWLEDGE_DIRECTORY
 from src.scraper import (
     extract_ast,
     get_ast_from_file_content,
@@ -66,13 +66,12 @@ def fill_import():
     current_word = Vim.eval('expand("<cword>")')
 
     current_buffer = Vim.get_current_buffer()
-    current_window = Vim.get_current_window()
-    cursor_current_row, cursor_current_col = current_window.cursor
 
     already_imported = is_imported_or_defined_in_file(
         stuff_to_import=current_word,
         vim_buffer=current_buffer
     )
+
     if already_imported:
         print(f'"{current_word}" is already visible in file scope')
         return
@@ -88,55 +87,44 @@ def fill_import():
             module_name=import_statement['module']
         )
 
-        current_buffer.append(import_statement['raw'], line_to_insert_import)
-        current_window.cursor = (cursor_current_row + 1, cursor_current_col)
-
+        Vim.insert_at_line(
+            import_statement=import_statement['raw'],
+            line=line_to_insert_import
+        )
         return
 
     # Step 2: Search in class definitions
     class_obj = get_class(class_name=current_word)
 
     if class_obj:
-        source = class_obj.file_path\
-            .replace(CURRENT_DIRECTORY, '')\
-            .replace('.py', '')\
-            .replace('/', '.')
-
-        if source.startswith('.'):
-            source = source[1:]
-
         line_to_insert_import = find_proper_line_for_import(
             buffer=current_buffer,
-            module_name=source
+            module_name=class_obj.module
         )
 
-        import_statement = f'from {source} import {current_word}'
+        import_statement = f'from {class_obj.module} import {current_word}'
 
-        current_buffer.append(import_statement, line_to_insert_import)
-        current_window.cursor = (cursor_current_row + 1, cursor_current_col)
+        Vim.insert_at_line(
+            import_statement=import_statement,
+            line=line_to_insert_import
+        )
         return
 
     # Step 3: Search in class definitions
     function_obj = get_function(function_name=current_word)
 
     if function_obj:
-        source = function_obj.file_path\
-            .replace(CURRENT_DIRECTORY, '')\
-            .replace('.py', '')\
-            .replace('/', '.')
-
-        if source.startswith('.'):
-            source = source[1:]
-
         line_to_insert_import = find_proper_line_for_import(
             buffer=current_buffer,
-            module_name=source
+            module_name=function_obj.module
         )
 
-        import_statement = f'from {source} import {current_word}'
+        import_statement = f'from {function_obj.module} import {current_word}'
 
-        current_buffer.append(import_statement, line_to_insert_import)
-        current_window.cursor = (cursor_current_row + 1, cursor_current_col)
+        Vim.insert_at_line(
+            import_statement=import_statement,
+            line=line_to_insert_import
+        )
         return
 
     print(f'Cannot find "{current_word}" export in the project :(')
