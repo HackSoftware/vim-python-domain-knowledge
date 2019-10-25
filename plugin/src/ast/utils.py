@@ -229,3 +229,57 @@ def ast_import_to_lines_str(ast_import: ast.ImportFrom) -> List[str]:
         *[f'    {name},' for name in names],
         ')',
     ]
+
+
+def get_new_import_proper_line_to_fit(file_content: str, module_name: str):
+    def sort_import_function(ast_import):
+        max_match = 0
+
+        existing_import_name = ast_import.module
+
+        if not existing_import_name:
+            return 0
+
+        for i in range(len(existing_import_name) + 1):
+            if module_name[:i] in existing_import_name or existing_import_name[:i] in module_name:
+                if i > max_match:
+                    max_match = i
+
+        return max_match
+
+    nodes = get_ast_nodes_from_file_content(file_content)
+
+    imports = [
+        node for node in nodes
+        if is_ast_import(node) or is_ast_import_from(node)
+    ]
+
+    sorted_imports = sorted(imports, key=sort_import_function, reverse=True)
+
+    most_simiar_import = sorted_imports[0]
+
+    should_be_imported_after = len(module_name) > len(most_simiar_import.module)
+
+    if should_be_imported_after:
+        return most_simiar_import.lineno
+
+    nodes_count = len(nodes)
+
+    for idx, node in enumerate(nodes):
+        if is_ast_import(node) or is_ast_import_from(node):
+            if are_imports_equal(node, most_simiar_import):
+                before_first_blank_line_after_the_node_or_end_line = before_first_blank_line_after_line_or_end_line(
+                    file_content=file_content,
+                    lineno=node.lineno
+                )
+                next_node_lineno = math.inf  # will be ignored if it's last node
+
+                if idx < nodes_count:
+                    next_node_lineno = nodes[idx + 1].lineno
+
+                return min(
+                    next_node_lineno,
+                    before_first_blank_line_after_the_node_or_end_line
+                ) - 1
+
+    return 0

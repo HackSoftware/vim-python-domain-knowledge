@@ -5,7 +5,6 @@ from src.settings import KNOWLEDGE_DIRECTORY
 from src.scraper import (
     extract_ast,
     get_ast_from_file_content,
-    find_proper_line_for_import,
     is_imported_or_defined_in_file,
 )
 from src.database import (
@@ -23,7 +22,9 @@ from src.database import (
 from src.ast.utils import (
     ast_import_to_lines_str,
     should_be_added_to_import,
+    get_new_import_proper_line_to_fit,
     get_modified_imports_and_lines_to_replace,
+    is_ast_import_from,
 )
 
 
@@ -107,8 +108,8 @@ def fill_import():
     )
 
     if import_obj:
-        line_to_insert_import = find_proper_line_for_import(
-            buffer=current_buffer,
+        line_to_insert_import = get_new_import_proper_line_to_fit(
+            file_content=file_content,
             module_name=import_obj.module
         )
 
@@ -124,8 +125,8 @@ def fill_import():
     class_obj = get_class(class_name=current_word)
 
     if class_obj:
-        line_to_insert_import = find_proper_line_for_import(
-            buffer=current_buffer,
+        line_to_insert_import = get_new_import_proper_line_to_fit(
+            file_content=file_content,
             module_name=class_obj.module
         )
 
@@ -141,8 +142,8 @@ def fill_import():
     function_obj = get_function(function_name=current_word)
 
     if function_obj:
-        line_to_insert_import = find_proper_line_for_import(
-            buffer=current_buffer,
+        line_to_insert_import = get_new_import_proper_line_to_fit(
+            file_content=file_content,
             module_name=function_obj.module
         )
 

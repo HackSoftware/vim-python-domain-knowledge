@@ -1,7 +1,6 @@
 from .services import (
     find_all_files,
     get_ast_objects_from_files,
-    find_proper_line_for_import,
     is_imported_or_defined_in_file,
     get_ast_from_file_content
 )
@@ -16,6 +15,5 @@ def extract_ast():
 __all__ = [
     'extract_ast',
     'is_imported_or_defined_in_file',
-    'find_proper_line_for_import',
     'get_ast_from_file_content'
 ]
