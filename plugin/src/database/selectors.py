@@ -15,7 +15,7 @@ def get_absolute_import_statement(obj_to_import: str) -> Import:
             FROM {DB_TABLES.IMPORTS}
             WHERE name=? and is_relative=0
             GROUP BY module
-            ORDER BY COUNT(*)
+            ORDER BY COUNT(*) DESC
         ''',
         (obj_to_import, )
     )
