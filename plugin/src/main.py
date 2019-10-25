@@ -20,6 +20,7 @@ from src.database import (
     update_classes_for_file,
     update_functions_for_file,
 )
+from src.ast.utils import should_be_added_to_import
 
 
 def refresh_from_file():
@@ -67,6 +68,7 @@ def fill_import():
     current_word = Vim.eval('expand("<cword>")')
 
     current_buffer = Vim.get_current_buffer()
+    file_content = '\n'.join(current_buffer)
 
     already_imported = is_imported_or_defined_in_file(
         stuff_to_import=current_word,
@@ -76,6 +78,14 @@ def fill_import():
     if already_imported:
         print(f'"{current_word}" is already visible in file scope')
         return
+
+    import_to_modify = should_be_added_to_import(
+        file_content=file_content,
+        import_name=current_word,
+        file_path=current_buffer.name
+    )
+    print(import_to_modify)
+    # TODO: Modify import
 
     # Step 1: Search in the existing imports
     import_obj = get_absolute_import_statement(

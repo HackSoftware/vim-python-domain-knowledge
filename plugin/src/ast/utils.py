@@ -4,6 +4,7 @@ import ast
 
 from src.common.data_structures import Import, Class, Function
 from src.common.utils import get_python_module_str_from_filepath
+from src.database.selectors import get_distinct_modules
 
 
 def is_ast_import(el) -> bool:
@@ -107,12 +108,32 @@ def ast_import_and_import_from_to_import_objects(
     ]
 
 
-def should_be_added_to_import(file_content: str, import_obj: Import) -> Optional[Union[ast.Import, ast.ImportFrom]]:
+def should_be_added_to_import(
+    file_content: str,
+    import_name: str,
+    file_path: str
+) -> Optional[Union[ast.Import, ast.ImportFrom]]:
+    """
+    Returns the ast import in file that the "import_name" should be added to
+
+    TODO: Think of a better name for this function?
+    """
     nodes = get_ast_nodes_from_file_content(file_content=file_content)
+    found_import_modules = get_distinct_modules(
+        import_name=import_name
+    )
 
     for node in nodes:
-        if is_ast_import(node):
-            pass
+        if is_ast_import(node) or is_ast_import_from(node):
+            import_objects = ast_import_and_import_from_to_import_objects(
+                ast_import=node,
+                file_path=file_path
+            )
 
-        if is_ast_import_from(node):
-            pass
+            matches = [
+                '.'.join(import_obj.module) in found_import_modules  # Revisit that join
+                for import_obj in import_objects
+            ]
+
+            if any(matches):
+                return node

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from .base import _get_db_connection
 from .constants import DB_TABLES
@@ -100,3 +100,76 @@ def get_function(function_name: str) -> Optional[Function]:
 
     if result:
         return Function(*result)
+
+
+def get_distinct_absolute_import_statements_modules(
+    import_name: str
+) -> List[str]:
+    connection = _get_db_connection()
+    cursor = connection.cursor()
+
+    cursor.execute(
+        f'''
+        SELECT DISTINCT module
+            FROM {DB_TABLES.IMPORTS}
+            WHERE name = "{import_name}"
+        ''',
+    )
+
+    result = cursor.fetchall()
+
+    return [el[0] for el in result]
+
+
+def get_distinct_classes_modules(
+    import_name: str
+) -> List[str]:
+    connection = _get_db_connection()
+    cursor = connection.cursor()
+
+    cursor.execute(
+        f'''
+        SELECT DISTINCT module
+            FROM {DB_TABLES.CLASS_DEFINITIONS}
+            WHERE name = "{import_name}"
+        ''',
+    )
+
+    result = cursor.fetchall()
+
+    return [el[0] for el in result]
+
+
+def get_distinct_functions_modules(
+    import_name: str
+) -> List[str]:
+    connection = _get_db_connection()
+    cursor = connection.cursor()
+
+    cursor.execute(
+        f'''
+        SELECT DISTINCT module
+            FROM {DB_TABLES.FUNCTION_DEFINITIONS}
+            WHERE name = "{import_name}"
+        ''',
+    )
+
+    result = cursor.fetchall()
+
+    return [el[0] for el in result]
+
+
+def get_distinct_modules(import_name: str) -> List[str]:
+    """
+    Returns list of uniques modules searching in:
+        - all imports
+        - all class definitions
+        - all functions
+    """
+    modules = [
+        *get_distinct_absolute_import_statements_modules(import_name=import_name),
+        *get_distinct_classes_modules(import_name=import_name),
+        *get_distinct_functions_modules(import_name=import_name),
+    ]
+
+    return list(set(modules))
