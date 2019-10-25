@@ -260,7 +260,7 @@ def get_new_import_proper_line_to_fit(file_content: str, module_name: str):
 
     should_be_imported_after = len(module_name) > len(most_simiar_import.module)
 
-    if should_be_imported_after:
+    if not should_be_imported_after:
         return most_simiar_import.lineno
 
     nodes_count = len(nodes)
