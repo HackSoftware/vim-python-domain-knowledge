@@ -114,7 +114,7 @@ def fill_import():
 
         Vim.insert_at_line(
             import_statement=import_statement,
-            line=line_to_insert_import
+            line=(line_to_insert_import - 1)
         )
         return
 
@@ -131,7 +131,7 @@ def fill_import():
 
         Vim.insert_at_line(
             import_statement=import_statement,
-            line=line_to_insert_import
+            line=(line_to_insert_import - 1)
         )
         return
 
@@ -148,7 +148,7 @@ def fill_import():
 
         Vim.insert_at_line(
             import_statement=import_statement,
-            line=line_to_insert_import
+            line=(line_to_insert_import - 1)
         )
         return
 
