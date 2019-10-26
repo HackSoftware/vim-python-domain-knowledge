@@ -80,14 +80,34 @@ def get_autocomletion_options():
     classes = get_all_classes()
     functions = get_all_functions()
 
-    exports = []
+    complete_options = []
     for class_obj in classes:
-        exports.append([class_obj.name, class_obj.module])
+        complete_options.append(
+            {
+                'icase': 1,
+                'word': class_obj.name,
+                'abbr': class_obj.name,
+                'menu': class_obj.module,
+                'info': '',
+                'empty': '',
+                'dup': ''
+            }
+        )
 
     for function_obj in functions:
-        exports.append([function_obj.name, function_obj.module])
+        complete_options.append(
+            {
+                'icase': 1,
+                'word': function_obj.name,
+                'abbr': function_obj.name,
+                'menu': function_obj.module,
+                'info': '',
+                'empty': '',
+                'dup': ''
+            }
+        )
 
-    return sorted(exports)
+    return sorted(complete_options, key=lambda opt: opt['word'])
 
 
 def setup_dictionary():

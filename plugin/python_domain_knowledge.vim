@@ -42,10 +42,9 @@ endfunction
 function! SetupAutoComplete()
 python3 << endOfPython
 import vim
-from src.main import get_autocompletions_options_func
+from src.main import get_autocompletions_options_str
 
-matches = get_autocompletions_options_func()
-matches_str = 'let l:data = [' + ','.join([f'["{name}", "{module}"]' for name, module in matches]) + ']'
+matches_str = get_autocompletions_options_str()
 
 complete_func = (
 '''
@@ -65,16 +64,8 @@ complete_func = (
         f'{matches_str}'
         '''
         for m in l:data
-          if m[0] =~ '^' . a:base
-            call add(l:res, {
-                \ 'icase': 1,
-                \ 'word': l:m[0],
-                \ 'abbr': '',
-                \ 'menu': l:m[1],
-                \ 'info': '',
-                \ 'empty': '',
-                \ 'dup': ''
-            \ })
+          if m['word'] =~ '^' . a:base
+            call add(l:res, m)
           endif
         endfor
         return res
@@ -83,6 +74,7 @@ complete_func = (
 	set completefunc=PythonDomainKnowledgeCompleteFunc
 '''
 )
+
 vim.command(complete_func)
 endOfPython
 endfunction

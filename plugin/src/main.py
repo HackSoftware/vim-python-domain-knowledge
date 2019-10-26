@@ -160,5 +160,25 @@ def fill_import():
     print(f'Cannot find "{current_word}" export in the project :(')
 
 
-def get_autocompletions_options_func():
-    return get_autocomletion_options()
+def get_autocompletions_options_str():
+    complete_options = get_autocomletion_options()
+    options_str = [
+        (
+            '{'
+            f'"icase": "{opt["icase"]}",'
+            f'"word": "{opt["word"]}",'
+            f'"abbr": "{opt["abbr"]}",'
+            f'"menu": "{opt["menu"]}",'
+            f'"info": "{opt["info"]}",'
+            f'"empty": "{opt["empty"]}",'
+            f'"dup": "{opt["dup"]}"'
+            '}'
+        )
+        for opt in complete_options
+    ]
+
+    first_part = 'let l:data = ['
+    content = ','.join(options_str)
+    last_part = ']'
+
+    return f'{first_part} {content} {last_part}'
