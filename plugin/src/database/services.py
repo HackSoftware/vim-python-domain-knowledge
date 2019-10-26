@@ -60,7 +60,8 @@ def _create_function_definitions_table():
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         file_path TEXT,
         name TEXT,
-        module TEXT
+        module TEXT,
+        arguments TEXT
     )
     '''
     return _run_query(create_table_query)
@@ -92,7 +93,7 @@ def get_autocomletion_options():
                 'icase': 1,
                 'word': class_obj.name,
                 'abbr': class_obj.name,
-                'menu': f'class {class_obj.name}{parents_str}',
+                'menu': f'| class {class_obj.name}{parents_str}',
                 'info': '',
                 'empty': '',
                 'dup': ''
@@ -100,12 +101,13 @@ def get_autocomletion_options():
         )
 
     for function_obj in functions:
+        arguments_str = function_obj.arguments.replace(',', ', ')
         complete_options.append(
             {
                 'icase': 1,
                 'word': function_obj.name,
                 'abbr': function_obj.name,
-                'menu': f'def {function_obj.name}',
+                'menu': f'| def {function_obj.name}({arguments_str})',
                 'info': '',
                 'empty': '',
                 'dup': ''
@@ -170,16 +172,17 @@ def insert_functions(functions: List[Function]):
         file_path = function_obj.file_path
         name = function_obj.name
         module = function_obj.module
+        arguments = ','.join(function_obj.arguments)
 
         functions_values.append(
-            f'("{file_path}", "{name}", "{module}")'
+            f'("{file_path}", "{name}", "{module}", "{arguments}")'
         )
 
     functions_str = ', '.join(functions_values)
 
     query = f'''
     INSERT INTO {DB_TABLES.FUNCTION_DEFINITIONS}
-        (FILE_PATH, NAME, MODULE)
+        (FILE_PATH, NAME, MODULE, ARGUMENTS)
         VALUES {functions_str}
     '''
 

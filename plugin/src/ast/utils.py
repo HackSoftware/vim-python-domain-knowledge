@@ -78,7 +78,11 @@ def ast_function_to_function_obj(ast_function: ast.FunctionDef, file_path: str) 
     return Function(
         file_path=file_path,
         name=ast_function.name,
-        module=get_python_module_str_from_filepath(file_path)
+        module=get_python_module_str_from_filepath(file_path),
+        arguments=[
+            *[el.arg for el in ast_function.args.args],
+            *[el.arg for el in ast_function.args.kwonlyargs],
+        ]
     )
 
 
