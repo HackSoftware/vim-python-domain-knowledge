@@ -69,7 +69,7 @@ complete_func = (
         return res
       endif
 	endfun
-	set completefunc=PythonDomainKnowledgeCompleteFunc
+    autocmd FileType python setlocal completefunc=PythonDomainKnowledgeCompleteFunc
 '''
 )
 
