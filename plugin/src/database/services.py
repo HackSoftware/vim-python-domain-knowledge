@@ -92,7 +92,7 @@ def get_autocomletion_options():
                 'icase': 1,
                 'word': class_obj.name,
                 'abbr': class_obj.name,
-                'menu': f'{class_obj.module}.{class_obj.name}{parents_str}',
+                'menu': f'class {class_obj.name}{parents_str}',
                 'info': '',
                 'empty': '',
                 'dup': ''
@@ -105,7 +105,7 @@ def get_autocomletion_options():
                 'icase': 1,
                 'word': function_obj.name,
                 'abbr': function_obj.name,
-                'menu': f'{function_obj.module}.{function_obj.name}',
+                'menu': f'def {function_obj.name}',
                 'info': '',
                 'empty': '',
                 'dup': ''
