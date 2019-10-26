@@ -261,7 +261,7 @@ def get_new_import_proper_line_to_fit(file_content: str, module_name: str):
     sorted_imports = sorted(imports, key=sort_import_function, reverse=True)
 
     if not list(sorted_imports):
-        return 0
+        return 1
 
     most_simiar_import = sorted_imports[0]
 
