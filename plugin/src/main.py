@@ -9,7 +9,6 @@ from src.scraper import (
 )
 from src.database import (
     setup_database,
-    setup_dictionary,
     insert_imports,
     insert_classes,
     insert_functions,
@@ -46,8 +45,6 @@ def refresh_from_file():
             file_path=vim_buffer.name
         )
 
-    setup_dictionary()
-
 
 def setup():
     if not os.path.isdir(KNOWLEDGE_DIRECTORY):
@@ -65,8 +62,6 @@ def setup():
 
     if functions:
         insert_functions(functions=functions)
-
-    setup_dictionary()
 
 
 def fill_import():

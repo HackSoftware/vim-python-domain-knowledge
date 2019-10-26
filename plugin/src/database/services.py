@@ -115,23 +115,6 @@ def get_autocomletion_options():
     return sorted(complete_options, key=lambda opt: opt['word'])
 
 
-def setup_dictionary():
-    from ..settings import DICTIONARY_PATH
-    classes = get_all_classes()
-    functions = get_all_functions()
-
-    exports = []
-    for class_obj in classes:
-        exports.append(f'{class_obj.name}\n')
-
-    for function_obj in functions:
-        exports.append(f'{function_obj.name}\n')
-
-    with open(DICTIONARY_PATH, 'w') as file:
-        for export in sorted(exports):
-            file.write(f'{export}\n')
-
-
 def insert_imports(imports: List[Import]):
     imports_values = []
 
