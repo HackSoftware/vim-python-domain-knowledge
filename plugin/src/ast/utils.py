@@ -78,7 +78,11 @@ def ast_function_to_function_obj(ast_function: ast.FunctionDef, file_path: str) 
     return Function(
         file_path=file_path,
         name=ast_function.name,
-        module=get_python_module_str_from_filepath(file_path)
+        module=get_python_module_str_from_filepath(file_path),
+        arguments=[
+            *[el.arg for el in ast_function.args.args],
+            *[el.arg for el in ast_function.args.kwonlyargs],
+        ]
     )
 
 
@@ -235,7 +239,7 @@ def get_new_import_proper_line_to_fit(file_content: str, module_name: str):
     def sort_import_function(ast_import):
         max_match = 0
 
-        existing_import_name = ast_import.module
+        existing_import_name = getattr(ast_import, 'module', None)
 
         if not existing_import_name:
             return 0
@@ -255,6 +259,9 @@ def get_new_import_proper_line_to_fit(file_content: str, module_name: str):
     ]
 
     sorted_imports = sorted(imports, key=sort_import_function, reverse=True)
+
+    if not list(sorted_imports):
+        return 0
 
     most_simiar_import = sorted_imports[0]
 

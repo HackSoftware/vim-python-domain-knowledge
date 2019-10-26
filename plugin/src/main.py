@@ -9,7 +9,6 @@ from src.scraper import (
 )
 from src.database import (
     setup_database,
-    setup_dictionary,
     insert_imports,
     insert_classes,
     insert_functions,
@@ -18,6 +17,7 @@ from src.database import (
     get_function,
     update_classes_for_file,
     update_functions_for_file,
+    get_autocomletion_options,
 )
 from src.ast.utils import (
     ast_import_to_lines_str,
@@ -45,8 +45,6 @@ def refresh_from_file():
             file_path=vim_buffer.name
         )
 
-    setup_dictionary()
-
 
 def setup():
     if not os.path.isdir(KNOWLEDGE_DIRECTORY):
@@ -64,8 +62,6 @@ def setup():
 
     if functions:
         insert_functions(functions=functions)
-
-    setup_dictionary()
 
 
 def fill_import():
@@ -157,3 +153,27 @@ def fill_import():
         return
 
     print(f'Cannot find "{current_word}" export in the project :(')
+
+
+def get_autocompletions_options_str():
+    complete_options = get_autocomletion_options()
+    options_str = [
+        (
+            '{'
+            f'"icase": "{opt["icase"]}",'
+            f'"word": "{opt["word"]}",'
+            f'"abbr": "{opt["abbr"]}",'
+            f'"menu": "{opt["menu"]}",'
+            f'"info": "{opt["info"]}",'
+            f'"empty": "{opt["empty"]}",'
+            f'"dup": "{opt["dup"]}"'
+            '}'
+        )
+        for opt in complete_options
+    ]
+
+    first_part = 'let l:data = ['
+    content = ','.join(options_str)
+    last_part = ']'
+
+    return f'{first_part} {content} {last_part}'

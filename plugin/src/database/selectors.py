@@ -51,7 +51,7 @@ def get_all_functions():
 
     cursor.execute(
         f'''
-        SELECT file_path, name, module
+        SELECT file_path, name, module, arguments
             FROM {DB_TABLES.FUNCTION_DEFINITIONS}
         ''',
     )
@@ -89,7 +89,7 @@ def get_function(function_name: str) -> Optional[Function]:
 
     cursor.execute(
         f'''
-        SELECT file_path, name, module
+        SELECT file_path, name, module, arguments
             FROM {DB_TABLES.FUNCTION_DEFINITIONS}
             WHERE name=?
         ''',
