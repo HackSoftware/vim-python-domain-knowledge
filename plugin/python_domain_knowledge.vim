@@ -27,17 +27,19 @@ from src.main import refresh_from_file
 
 refresh_from_file()
 endOfPython
+call SetupPythonDomainKnowledgeAutoComplete()
 endfunction
 
 function! PythonDomainKnowledgeFillImport()
 python3 << endOfPython
+import vim
 from src.main import fill_import
 
 fill_import()
 endOfPython
 endfunction
 
-function! SetupAutoComplete()
+function! SetupPythonDomainKnowledgeAutoComplete()
 python3 << endOfPython
 import vim
 from src.main import get_autocompletions_options_str
@@ -77,4 +79,4 @@ vim.command(complete_func)
 endOfPython
 endfunction
 
-call SetupAutoComplete()
+call SetupPythonDomainKnowledgeAutoComplete()
