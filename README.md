@@ -17,9 +17,9 @@ The aim of this plugin is to automate this process by generating knowledge for y
 
 ## Version 1.0.0 roadmap:
 
-- Ability to autosuggest an import for the function/class/variable under the cursor using a statistics over the existing imports for this function accross the project
-- Automatically suggest and add function/class/variable import at the right place in the file
-- Global fuzzy match autocomplete using the "visible" classes, functions and variables (for all python files in the project) ordered by frequency of usage accross the project
+- ~Ability to autosuggest an import for the function/class/variable under the cursor using a statistics over the existing imports for this function accross the project~
+- ~Automatically suggest and add function/class/variable import at the right place in the file~
+- ~Global fuzzy match autocomplete using the "visible" classes, functions and variables (for all python files in the project) ordered by frequency of usage accross the project~
 - Add tests
 
 
@@ -27,11 +27,11 @@ The aim of this plugin is to automate this process by generating knowledge for y
 
 - ~Vim function that triggers refresh of the project knowledge~
 - ~Vim function that triggers suggestion of import source and auto add the import on confirmation~
-- Vim function that opens dropdown for the word under the cursor suggesting the `N most possible classes/functions/variables with their sources` in the project that fuzzy matches the pattern (+ autoadd the import at the right place)
+- ~Vim function that opens dropdown for the word under the cursor suggesting the `N most possible classes/functions/variables with their sources` in the project that fuzzy matches the pattern (+ autoadd the import at the right place)~
 
 ## Technical requirements for 1.0.0:
 
-- Written in python
+- ~Written in python~
 - Asynchronous work (using Vim 8 API)
-- Use SQLite for keeping project knowledge
-- Store all of the project specific knowledge in a folder in the project (`.vim-python-knowledge/` for exapmle) in SQLite database
+- ~Use SQLite for keeping project knowledge~
+- ~Store all of the project specific knowledge in a folder in the project (`.vim-python-knowledge/` for exapmle) in SQLite database~
