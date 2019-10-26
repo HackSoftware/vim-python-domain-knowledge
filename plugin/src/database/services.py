@@ -82,12 +82,17 @@ def get_autocomletion_options():
 
     complete_options = []
     for class_obj in classes:
+        parents_str = ''
+
+        if class_obj.parents:
+            parents_str = f'({class_obj.parents})'
+
         complete_options.append(
             {
                 'icase': 1,
                 'word': class_obj.name,
                 'abbr': class_obj.name,
-                'menu': class_obj.module,
+                'menu': f'{class_obj.module}.{class_obj.name}{parents_str}',
                 'info': '',
                 'empty': '',
                 'dup': ''
@@ -100,7 +105,7 @@ def get_autocomletion_options():
                 'icase': 1,
                 'word': function_obj.name,
                 'abbr': function_obj.name,
-                'menu': function_obj.module,
+                'menu': f'{function_obj.module}.{function_obj.name}',
                 'info': '',
                 'empty': '',
                 'dup': ''
