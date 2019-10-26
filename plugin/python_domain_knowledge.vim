@@ -9,9 +9,9 @@ python3 sys.path.append(vim.eval('expand("<sfile>:p:h")'))
 "  Functions
 " -------------------
 
-set complete+=k
 autocmd BufWrite *.py :call PythonDomainKnowledgeRefreshFile()
-
+" To not prefill the first option from the autocomplete
+set completeopt=menuone,longest,preview
 
 function! PythonDomainKnowledgeCollectImports()
 python3 << endOfPython
@@ -32,7 +32,6 @@ endfunction
 
 function! PythonDomainKnowledgeFillImport()
 python3 << endOfPython
-import vim
 from src.main import fill_import
 
 fill_import()
@@ -58,11 +57,10 @@ complete_func = (
         endwhile
         return start
       else
-        " find months matching with "a:base"
-        let res = []
         '''
         f'{matches_str}'
         '''
+        let res = []
         for m in l:data
           if m['word'] =~ '^' . a:base
             call add(l:res, m)
