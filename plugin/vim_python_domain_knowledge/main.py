@@ -1,13 +1,13 @@
 import os
-from src.common.vim import Vim
-from src.common.utils import get_import_str_from_import_obj
-from src.settings import KNOWLEDGE_DIRECTORY
-from src.scraper import (
+from vim_python_domain_knowledge.common.vim import Vim
+from vim_python_domain_knowledge.common.utils import get_import_str_from_import_obj
+from vim_python_domain_knowledge.settings import KNOWLEDGE_DIRECTORY
+from vim_python_domain_knowledge.scraper import (
     extract_ast,
     get_ast_from_file_content,
     is_imported_or_defined_in_file,
 )
-from src.database import (
+from vim_python_domain_knowledge.database import (
     setup_database,
     insert_imports,
     insert_classes,
@@ -18,8 +18,9 @@ from src.database import (
     update_classes_for_file,
     update_functions_for_file,
     get_autocomletion_options,
+    get_absolute_import_statement_by_alias,
 )
-from src.ast.utils import (
+from vim_python_domain_knowledge.ast.utils import (
     ast_import_to_lines_str,
     should_be_added_to_import,
     get_new_import_proper_line_to_fit,
@@ -151,6 +152,28 @@ def fill_import():
             line=(line_to_insert_import - 1)
         )
         return
+
+    # Step 4: Search in imports with aliases (only if not found)
+    import_obj_with_alias = get_absolute_import_statement_by_alias(
+        obj_to_import=current_word
+    )
+
+    if import_obj_with_alias:
+        line_to_insert_import = get_new_import_proper_line_to_fit(
+            file_content=file_content,
+            module_name=import_obj_with_alias.module
+        )
+
+        import_statement = get_import_str_from_import_obj(import_obj=import_obj_with_alias)
+
+        Vim.insert_at_line(
+            import_statement=import_statement,
+            line=(line_to_insert_import - 1)
+        )
+        return
+
+
+
 
     print(f'Cannot find "{current_word}" export in the project :(')
 

@@ -1,6 +1,6 @@
 from typing import List
 
-from src.common.data_structures import Import, Class, Function
+from vim_python_domain_knowledge.common.data_structures import Import, Class, Function
 
 from .base import _get_db_connection
 from .constants import DB_TABLES

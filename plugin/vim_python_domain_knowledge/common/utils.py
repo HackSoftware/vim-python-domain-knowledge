@@ -1,6 +1,6 @@
-from src.settings import CURRENT_DIRECTORY
+from vim_python_domain_knowledge.settings import CURRENT_DIRECTORY
 
-from src.common.data_structures import Import
+from vim_python_domain_knowledge.common.data_structures import Import
 
 
 def get_python_module_str_from_filepath(file_path):
@@ -38,4 +38,4 @@ def before_first_blank_line_after_line_or_end_line(file_content: str, lineno: in
     if blank_lines_numbers_after_lineno:
         return blank_lines_numbers_after_lineno[0]
 
-    return len(lines) - 1
+    return len(lines)

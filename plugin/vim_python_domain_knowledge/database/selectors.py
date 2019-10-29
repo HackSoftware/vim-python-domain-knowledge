@@ -2,7 +2,7 @@ from typing import Optional, List
 
 from .base import _get_db_connection
 from .constants import DB_TABLES
-from src.common.data_structures import Class, Function, Import
+from vim_python_domain_knowledge.common.data_structures import Class, Function, Import
 
 
 def get_absolute_import_statement(obj_to_import: str) -> Import:
@@ -14,6 +14,27 @@ def get_absolute_import_statement(obj_to_import: str) -> Import:
         SELECT module, name, alias, is_relative
             FROM {DB_TABLES.IMPORTS}
             WHERE name=? and is_relative=0
+            GROUP BY module
+            ORDER BY COUNT(*) DESC
+        ''',
+        (obj_to_import, )
+    )
+
+    result = cursor.fetchone()
+
+    if result:
+        return Import(*result)
+
+
+def get_absolute_import_statement_by_alias(obj_to_import: str) -> Import:
+    connection = _get_db_connection()
+    cursor = connection.cursor()
+
+    cursor.execute(
+        f'''
+        SELECT module, name, alias, is_relative
+            FROM {DB_TABLES.IMPORTS}
+            WHERE alias=? and is_relative=0
             GROUP BY module
             ORDER BY COUNT(*) DESC
         ''',

@@ -1,6 +1,6 @@
 import os
 
-from src.ast.utils import (
+from vim_python_domain_knowledge.ast.utils import (
     get_ast_nodes_from_file_content,
     is_ast_import,
     is_ast_import_from,
@@ -12,7 +12,7 @@ from src.ast.utils import (
     ast_import_and_import_from_to_import_objects,
 )
 
-from src.settings import CURRENT_DIRECTORY
+from vim_python_domain_knowledge.settings import CURRENT_DIRECTORY
 
 
 def find_all_files():
