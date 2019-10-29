@@ -33,7 +33,7 @@ NOTE: This plugin is not a replacement of [jedi-vim](https://github.com/davidhal
 
 More about this: [here](#automatic-import-filling)
 
-TODO: Gif needed
+![Quick Demo](./readme_media/overview.gif "Quick demo")
 
 ## Getting Started
 
