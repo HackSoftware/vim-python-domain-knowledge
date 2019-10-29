@@ -4,6 +4,7 @@ Vim plugin for *Python 3+* 🐍 written in *Python 3+* 🐍 for project specific
 
 - - -
 * [Overview](#Overview)
+* [Motivation](#motivation)
 * [Getting Started](#getting-started)
     * [Installation](#installation)
         - [Vundle](#vundle)
@@ -13,7 +14,6 @@ Vim plugin for *Python 3+* 🐍 written in *Python 3+* 🐍 for project specific
 * [Usage](#usage)
     * [Global autocomplete](#global-autocomplete)
     * [Automatic import filling](#automatic-import-filling)
-* [Motivation](#motivation)
 * [Feedback](#feedback)
 - - -
 
@@ -35,6 +35,21 @@ NOTE: This plugin is not a replacement of [jedi-vim](https://github.com/davidhal
 More about this: [here](#automatic-import-filling)
 
 ![Quick Demo](./readme_media/overview.gif "Quick demo")
+
+
+## Motivation
+
+A really common action in the python development is using functions that are not in the same file. The process usually looks like this:
+
+1. Start typing the name (probably forgot the exact name since is long and explicitly descriptive)
+2. Jump to the top of the file looking at the imports
+3. Remember the place where the function lives
+4. Find the right place in the imports to put the new function import
+5. Start typing by autosuggesting the name using the import location
+6. Jump back to the place where you want to use the function and autocomlete it
+
+The aim of this plugin is to automate this process by generating knowledge for your existing codebase and use it to autosuggest the function/class/constant you want to use at the moment of typing + suggest the right import and put it at the right place.
+
 
 ## Getting Started
 
@@ -151,20 +166,6 @@ Write the full name of the function/class you want to use. Then in *normal mode*
 ![Import autofil demo](./readme_media/fill_imports_demo.gif "Autofil import demo 1")
 
 ![Import autofil demo](./readme_media/fill_imports_demo_2.gif "Autofil import demo 1")
-
-
-## Motivation
-
-A really common action in the python development is using functions that are not in the same file. The process usually looks like this:
-
-1. Start typing the name (probably forgot the exact name since is long and explicitly descriptive)
-2. Jump to the top of the file looking at the imports
-3. Remember the place where the function lives
-4. Find the right place in the imports to put the new function import
-5. Start typing by autosuggesting the name using the import location
-6. Jump back to the place where you want to use the function and autocomlete it
-
-The aim of this plugin is to automate this process by generating knowledge for your existing codebase and use it to autosuggest the function/class/constant you want to use at the moment of typing + suggest the right import and put it at the right place.
 
 
 ## Feedback
