@@ -15,6 +15,7 @@ A really common action in the python development is using functions that are not
 
 The aim of this plugin is to automate this process by generating knowledge for your existing codebase and use it to autosuggest the function/class/constant you want to use at the moment of typing + suggest the right import and put it at the right place.
 
+TODO: gif needed
 
 ## Setup
 
@@ -61,7 +62,7 @@ cd ~/.vim/bundle
 git clone https://github.com/HackSoftware/vim-python-domain-knowledge.git
 ```
 
-### 2. Setup for project
+### 2. Setup for project (this should be done only once for a project)
 
 1. Go to the project's root folder (where is your PYTHONPATH)
 
@@ -75,18 +76,54 @@ cd /path/to/project
 :call PythonDomainKnowledgeCollectImports()
 ```
 
-*NOTE:* It could take a few seconds until it parse the whole project's Abstract syntax tree and extract the need
+*NOTE:* It could take a few seconds until it parse the whole project's Abstract syntax tree and extract the need. If everything is successfull you should see `.vim_domain_knowledge/` folder inside you project
 
-3. Restart Vim
+3. Restart Vim (This is necessary since the plugin is setting up custom autocomplete function)
 
-4. You're ready
+4. Add this to `.gitignore` (optionally)
+
+```
+.vim_domain_knowledge/
+
+```
+
+5. You're ready
+
+## Configuration
+
+```
+" To map your shortcut for autofilling import for the word under the cursor
+nnoremap <your_custom_mapping> :call PythonDomainKnowledgeFillImport()<CR>
+```
+
+Sample configuration:
+
+```
+" This will autofill the import for the word under the cursor when you press F9 key (in normal mode) :)
+nnoremap <F9> :call PythonDomainKnowledgeFillImport()<CR>
+```
 
 ## Usage
 
 ### 1. Global autocomplete
 
+Start typing and press `Ctrl + X` and then `Ctrl + U` (while in insert mode)
+NOTE: You can remap this ^ . It's the default vim shortcut for autocomplete from custom `completefunc`
+
+Example:
+
+TODO: gif needed
 
 ### 2. Automatic import filling
 
-## Configuration
+Write the full name of the function/class you want to use. Then in *normal mode* run:
 
+```
+:call PythonDomainKnowledgeFillImport()<CR>
+```
+
+(or a keybinding for this)
+
+Example:
+
+TODO: gif needed
