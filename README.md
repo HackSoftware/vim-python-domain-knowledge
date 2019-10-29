@@ -1,28 +1,39 @@
-# vim-python-domain-knowledge (NOT USABLE YET - under development⚠️)
+# Python Domain Knowledge (NOT USABLE YET - under development⚠️)
 
-Vim plugin for *Python* written in *Python* that automates usual development actions using project specific knowledge
+Vim plugin for *Python 3+* 🐍 written in *Python 3+* 🐍 that aims to automate usual development actions using project specific knowledge.
 
-
-## Documentation
-
-1. [Overview](#Overview)
-2. [Getting Started](#getting-started)
-    2.1 [Installation](#installation)
+- - -
+* [Overview](#Overview)
+* [Getting Started](#getting-started)
+    * [Installation](#installation)
         - [Vundle](#vundle)
         - [Plug](#plug)
         - [Pathogen](#pathogen)
-    2.2 [Setup for a project](#setup-for-a-project)
-3. [Usage](#usage)
-    3.1 [Global autocomplete](#global-autocomplete)
-    3.2 [Automatic import filling](#automatic-import-filling)
-4. [Motivation](#motivation)
-
+    * [Setup for a project](#setup-for-a-project)
+* [Usage](#usage)
+    * [Global autocomplete](#global-autocomplete)
+    * [Automatic import filling](#automatic-import-filling)
+* [Motivation](#motivation)
+- - -
 
 ## Overview
 
+The current state of `vim-python-domain-knowledge`has 2 responsibilities:
 
-Quick demo:
-TODO: Gid needed
+1. Global "project specific" autocomplete for all classes and functions that are defined inside a given projects
+
+NOTE: This plugin is not a replacement of [jedi-vim](https://github.com/davidhalter/jedi-vim). It provides a first-level autocomplete for everything inside the project (jedi provides detailed attributes specific autocomplete only for variables in the context)
+
+More about this: [here](#global-autocomplete)
+
+2. Automatically autofill the import for:
+  - every class that's defined inside the project (no matter in which file)
+  - every function that's defined inside the project (no matter in which file)
+  - every imported stuff (from any third party library inside the project)
+
+More about this: [here](#automatic-import-filling)
+
+TODO: Gif needed
 
 ## Getting Started
 
