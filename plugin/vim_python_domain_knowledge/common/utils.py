@@ -1,6 +1,6 @@
-from src.settings import CURRENT_DIRECTORY
+from vim_python_domain_knowledge.settings import CURRENT_DIRECTORY
 
-from src.common.data_structures import Import
+from vim_python_domain_knowledge.common.data_structures import Import
 
 
 def get_python_module_str_from_filepath(file_path):

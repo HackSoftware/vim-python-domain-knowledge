@@ -4,12 +4,12 @@ import math
 
 import ast
 
-from src.common.data_structures import Import, Class, Function
-from src.common.utils import (
+from vim_python_domain_knowledge.common.data_structures import Import, Class, Function
+from vim_python_domain_knowledge.common.utils import (
     get_python_module_str_from_filepath,
     before_first_blank_line_after_line_or_end_line,
 )
-from src.database.selectors import get_distinct_modules
+from vim_python_domain_knowledge.database.selectors import get_distinct_modules
 
 
 def is_ast_import(el) -> bool:

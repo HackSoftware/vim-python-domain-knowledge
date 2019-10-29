@@ -2,7 +2,7 @@ from typing import Optional, List
 
 from .base import _get_db_connection
 from .constants import DB_TABLES
-from src.common.data_structures import Class, Function, Import
+from vim_python_domain_knowledge.common.data_structures import Class, Function, Import
 
 
 def get_absolute_import_statement(obj_to_import: str) -> Import:

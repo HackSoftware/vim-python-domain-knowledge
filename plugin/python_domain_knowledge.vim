@@ -15,7 +15,7 @@ set completeopt=menuone,longest,preview
 
 function! PythonDomainKnowledgeCollectImports()
 python3 << endOfPython
-from src.main import setup
+from vim_python_domain_knowledge.main import setup
 
 try:
     setup()
@@ -26,7 +26,7 @@ endfunction
 
 function! PythonDomainKnowledgeRefreshFile()
 python3 << endOfPython
-from src.main import refresh_from_file
+from vim_python_domain_knowledge.main import refresh_from_file
 
 try:
     refresh_from_file()
@@ -38,7 +38,7 @@ endfunction
 
 function! PythonDomainKnowledgeFillImport()
 python3 << endOfPython
-from src.main import fill_import
+from vim_python_domain_knowledge.main import fill_import
 
 try:
     fill_import()
@@ -50,7 +50,7 @@ endfunction
 function! SetupPythonDomainKnowledgeAutoComplete()
 python3 << endOfPython
 import vim
-from src.main import get_autocompletions_options_str
+from vim_python_domain_knowledge.main import get_autocompletions_options_str
 
 
 try:

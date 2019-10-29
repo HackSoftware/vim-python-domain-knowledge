@@ -1,13 +1,13 @@
 import os
-from src.common.vim import Vim
-from src.common.utils import get_import_str_from_import_obj
-from src.settings import KNOWLEDGE_DIRECTORY
-from src.scraper import (
+from vim_python_domain_knowledge.common.vim import Vim
+from vim_python_domain_knowledge.common.utils import get_import_str_from_import_obj
+from vim_python_domain_knowledge.settings import KNOWLEDGE_DIRECTORY
+from vim_python_domain_knowledge.scraper import (
     extract_ast,
     get_ast_from_file_content,
     is_imported_or_defined_in_file,
 )
-from src.database import (
+from vim_python_domain_knowledge.database import (
     setup_database,
     insert_imports,
     insert_classes,
@@ -19,7 +19,7 @@ from src.database import (
     update_functions_for_file,
     get_autocomletion_options,
 )
-from src.ast.utils import (
+from vim_python_domain_knowledge.ast.utils import (
     ast_import_to_lines_str,
     should_be_added_to_import,
     get_new_import_proper_line_to_fit,
