@@ -14,6 +14,7 @@ Vim plugin for *Python 3+* 🐍 written in *Python 3+* 🐍 for project specific
     * [Global autocomplete](#global-autocomplete)
     * [Automatic import filling](#automatic-import-filling)
 * [Motivation](#motivation)
+* [Feedback](#feedback)
 - - -
 
 ## Overview
@@ -163,3 +164,12 @@ A really common action in the python development is using functions that are not
 6. Jump back to the place where you want to use the function and autocomlete it
 
 The aim of this plugin is to automate this process by generating knowledge for your existing codebase and use it to autosuggest the function/class/constant you want to use at the moment of typing + suggest the right import and put it at the right place.
+
+
+## Feedback
+
+Feedback is the best power for making things better. Any form of feedback is highly appreaciated:
+
+- open -an issue - for bug 🐛 or new feature proposal
+- give a star ⭐
+- contribute (fork the repo + open pull request)
