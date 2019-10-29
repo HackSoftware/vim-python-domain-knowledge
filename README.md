@@ -13,6 +13,8 @@ Vim plugin for *Python* written in *Python* that automates usual development act
         - [Pathogen](#pathogen)
     * [Setup for a project](#setup-for-a-project)
 * [Usage](#usage)
+    * [Global autocomplete](#global-autocomplete)
+    * [Automatic import filling](#automatic-import-filling)
 * [Motivation](#motivation)
 
 
@@ -24,9 +26,9 @@ TODO: Gid needed
 
 ## Getting Started
 
-### 1. Installation
+### Installation
 
-#### 1. Vundle
+#### Vundle
 
 Place this in your `.vimrc`
 
@@ -42,7 +44,7 @@ Plugin 'HackSoftware/vim-python-domain-knowledge'
 PluginInstall
 ```
 
-#### 2. Plug
+#### Plug
 
 Place this in your `.vimrc`
 
@@ -58,7 +60,7 @@ Plug 'HackSoftware/vim-python-domain-knowledge'
 PlugInstall
 ```
 
-#### 3. Pathogen
+#### Pathogen
 
 Run the following in a terminal:
 
@@ -69,17 +71,17 @@ git clone https://github.com/HackSoftware/vim-python-domain-knowledge.git
 
 *IMPORTANT NOTE:* The only external dependency of this plugin is SQLite3 (https://www.sqlite.org/index.html). Make sure you have it installed on your operating system :)
 
-### 2. Setup for a project
+### Setup for a project
 
 *NOTE:* this should be done only once for a project
 
-#### 1. Go to the project root folder
+#### Go to the project root folder
 
 ```
 cd /path/to/project
 ```
 
-#### 2. Open Vim and run:
+#### Open Vim and run:
 
 ```
 :call PythonDomainKnowledgeCollectImports()
@@ -87,16 +89,16 @@ cd /path/to/project
 
 *NOTE:* It could take a few seconds until it parse the whole project's Abstract syntax tree and extract the need. If everything is successfull you should see `.vim_domain_knowledge/` folder inside you project
 
-#### 3. Restart Vim (This is necessary since the plugin is setting up custom autocomplete function)
+#### Restart Vim (This is necessary since the plugin is setting up custom autocomplete function)
 
-#### 4. Add this to `.gitignore` (optionally)
+#### Add this to `.gitignore` (optionally)
 
 ```
 .vim_domain_knowledge/
 
 ```
 
-#### 5. Enjoy
+#### Enjoy
 
 ![Setup demo](./readme_media/setup_demo.gif "Setup demo")
 
@@ -116,14 +118,14 @@ nnoremap <F9> :call PythonDomainKnowledgeFillImport()<CR>
 
 ## Usage
 
-### 1. Global autocomplete
+### Global autocomplete
 
 Start typing and press `Ctrl + X` and then `Ctrl + U` (while in insert mode)
 NOTE: You can remap this ^ . It's the default vim shortcut for autocomplete from custom `completefunc`
 
 ![Autocomplete demo](./readme_media/auto_complete_demo.gif "Autocomplete demo")
 
-### 2. Automatic import filling
+### Automatic import filling
 
 Write the full name of the function/class you want to use. Then in *normal mode* run:
 
