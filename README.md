@@ -7,11 +7,11 @@ Vim plugin for *Python* written in *Python* that automates usual development act
 
 * [Overview](#Overview)
 * [Getting Started](#getting-started)
-    - [Installation](#installation)
+    * [Installation](#installation)
         - [Vundle](#vundle)
         - [Plug](#plug)
         - [Pathogen](#pathogen)
-    - [Setup for a project](#setup-for-a-project)
+    * [Setup for a project](#setup-for-a-project)
 * [Usage](#usage)
 * [Motivation](#motivation)
 
