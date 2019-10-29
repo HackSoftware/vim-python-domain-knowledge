@@ -13,7 +13,7 @@ Vim plugin for *Python* written in *Python* that automates usual development act
         - [Pathogen](#pathogen)
     - [Setup for a project](#setup-for-a-project)
 * [Usage](#usage)
-* [Motivation](motivation)
+* [Motivation](#motivation)
 
 
 ## Overview
