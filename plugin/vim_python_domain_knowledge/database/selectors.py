@@ -26,6 +26,27 @@ def get_absolute_import_statement(obj_to_import: str) -> Import:
         return Import(*result)
 
 
+def get_absolute_import_statement_by_alias(obj_to_import: str) -> Import:
+    connection = _get_db_connection()
+    cursor = connection.cursor()
+
+    cursor.execute(
+        f'''
+        SELECT module, name, alias, is_relative
+            FROM {DB_TABLES.IMPORTS}
+            WHERE alias=? and is_relative=0
+            GROUP BY module
+            ORDER BY COUNT(*) DESC
+        ''',
+        (obj_to_import, )
+    )
+
+    result = cursor.fetchone()
+
+    if result:
+        return Import(*result)
+
+
 def get_all_classes():
     connection = _get_db_connection()
     cursor = connection.cursor()
