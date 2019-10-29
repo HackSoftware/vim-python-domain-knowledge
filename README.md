@@ -132,7 +132,7 @@ nnoremap <F9> :call PythonDomainKnowledgeFillImport()<CR>
 
 ### Global autocomplete
 
-Start typing and press `Ctrl + X` and then `Ctrl + U` (while in insert mode)
+Start typing and press `Ctrl + x` and then `Ctrl + u` (while in insert mode)
 NOTE: You can remap this ^ . It's the default vim shortcut for autocomplete from custom `completefunc`
 
 ![Autocomplete demo](./readme_media/auto_complete_demo.gif "Autocomplete demo")
