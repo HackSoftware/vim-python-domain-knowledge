@@ -1,6 +1,6 @@
-# Python Domain Knowledge (NOT USABLE YET - under development⚠️)
+# Python Domain Knowledge - Vim plugin for Python 3+
 
-Vim plugin for *Python 3+* 🐍 written in *Python 3+* 🐍 that aims to automate usual development actions using project specific knowledge.
+Vim plugin for *Python 3+* 🐍 written in *Python 3+* 🐍 for project specific *autocomplete* of functions and classes and *automatic import filing*
 
 - - -
 * [Overview](#Overview)
