@@ -91,6 +91,8 @@ cd /path/to/project
 
 5. You're ready
 
+![Setup demo](./readme_media/setup_demo.gif "Setup demo")
+
 ## Configuration
 
 ```
@@ -112,9 +114,7 @@ nnoremap <F9> :call PythonDomainKnowledgeFillImport()<CR>
 Start typing and press `Ctrl + X` and then `Ctrl + U` (while in insert mode)
 NOTE: You can remap this ^ . It's the default vim shortcut for autocomplete from custom `completefunc`
 
-Example:
-
-TODO: gif needed
+![Autocomplete demo](./readme_media/auto_complete_demo.gif "Autocomplete demo")
 
 ### 2. Automatic import filling
 
@@ -126,6 +126,6 @@ Write the full name of the function/class you want to use. Then in *normal mode*
 
 (or a keybinding for this)
 
-Example:
+![Import autofil demo](./readme_media/fill_imports_demo.gif "Autofil import demo 1")
 
-TODO: gif needed
+![Import autofil demo](./readme_media/fill_imports_demo_2.gif "Autofil import demo 1")
