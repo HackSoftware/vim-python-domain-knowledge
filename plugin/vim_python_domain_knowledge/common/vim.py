@@ -1,4 +1,9 @@
-import vim
+try:
+    import vim
+except Exception:
+    # for tests...
+    from unittest.mock import MagicMock
+    vim = MagicMock()
 
 
 class Vim:

@@ -251,6 +251,12 @@ def get_new_import_proper_line_to_fit(file_content: str, module_name: str):
 
         return max_match
 
+    # Sanity check that file is valid
+    root = ast_parse_file_content(file_content=file_content)
+    if root is None:
+        error_msg = 'Invalid syntax in file. Unable to fill import'
+        raise Exception(error_msg)
+
     nodes = get_ast_nodes_from_file_content(file_content)
 
     imports = [
@@ -265,7 +271,7 @@ def get_new_import_proper_line_to_fit(file_content: str, module_name: str):
 
     most_simiar_import = sorted_imports[0]
 
-    should_be_imported_after = len(module_name) > len(most_simiar_import.module)
+    should_be_imported_after = module_name > most_simiar_import.module
 
     if not should_be_imported_after:
         return most_simiar_import.lineno
@@ -287,6 +293,6 @@ def get_new_import_proper_line_to_fit(file_content: str, module_name: str):
                 return min(
                     next_node_lineno,
                     before_first_blank_line_after_the_node_or_end_line
-                ) - 1
+                )
 
-    return 0
+    return 1
