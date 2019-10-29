@@ -5,17 +5,17 @@ Vim plugin for *Python* written in *Python* that automates usual development act
 
 ## Documentation
 
-* [Overview](#Overview)
-* [Getting Started](#getting-started)
-    * [Installation](#installation)
+1. [Overview](#Overview)
+2. [Getting Started](#getting-started)
+    2.1 [Installation](#installation)
         - [Vundle](#vundle)
         - [Plug](#plug)
         - [Pathogen](#pathogen)
-    * [Setup for a project](#setup-for-a-project)
-* [Usage](#usage)
-    * [Global autocomplete](#global-autocomplete)
-    * [Automatic import filling](#automatic-import-filling)
-* [Motivation](#motivation)
+    2.2 [Setup for a project](#setup-for-a-project)
+3. [Usage](#usage)
+    3.1 [Global autocomplete](#global-autocomplete)
+    3.2 [Automatic import filling](#automatic-import-filling)
+4. [Motivation](#motivation)
 
 
 ## Overview
