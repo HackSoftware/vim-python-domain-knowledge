@@ -62,6 +62,8 @@ cd ~/.vim/bundle
 git clone https://github.com/HackSoftware/vim-python-domain-knowledge.git
 ```
 
+*IMPORTANT NOTE:* The only external dependency of this plugin is SQLite3 (https://www.sqlite.org/index.html). Make sure you have it installed on your operating system :)
+
 ### 2. Setup for project (this should be done only once for a project)
 
 1. Go to the project's root folder (where is your PYTHONPATH)
