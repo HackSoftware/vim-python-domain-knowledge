@@ -170,6 +170,6 @@ The aim of this plugin is to automate this process by generating knowledge for y
 
 Feedback is the best power for making things better. Any form of feedback is highly appreaciated:
 
-- open -an issue - for bug 🐛 or new feature proposal
+- open an issue - for bug 🐛 or new feature proposal
 - give a star ⭐
 - contribute (fork the repo + open pull request)
