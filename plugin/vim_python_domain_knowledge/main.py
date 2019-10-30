@@ -223,7 +223,7 @@ def navigate_to_file_by_search_obj_id(obj_id):
         return
 
     if obj_id.startswith('f'):
-        function_obj = get_function_by_id(function_id=obj_id[:1])
+        function_obj = get_function_by_id(function_id=obj_id[1:])
 
         if function_obj:
             Vim.go_to_file(function_obj.file_path, 1)
