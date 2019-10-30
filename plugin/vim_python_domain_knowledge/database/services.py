@@ -76,12 +76,38 @@ def setup_database():
     _create_class_definitions_table()
     _create_function_definitions_table()
 
+def get_search_options():
+    classes = get_all_classes()
+    functions = get_all_functions()
+
+    search_options = []
+
+    for class_obj in classes:
+        parents_str = ''
+
+        if class_obj.parents:
+            parents_str = f'({class_obj.parents})'
+
+        search_options.append(
+            f'class {class_obj.name}{parents_str}|c{class_obj.id}',
+        )
+
+    for function_obj in functions:
+        arguments_str = function_obj.arguments.replace(',', ', ')
+
+        search_options.append(
+            f'def {function_obj.name}({arguments_str})|f{function_obj.id}',
+        )
+
+    return sorted(search_options)
+
 
 def get_autocomletion_options():
     classes = get_all_classes()
     functions = get_all_functions()
 
     complete_options = []
+
     for class_obj in classes:
         parents_str = ''
 

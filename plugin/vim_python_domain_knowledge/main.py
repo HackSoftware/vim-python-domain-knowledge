@@ -18,7 +18,10 @@ from vim_python_domain_knowledge.database import (
     update_classes_for_file,
     update_functions_for_file,
     get_autocomletion_options,
+    get_search_options,
     get_absolute_import_statement_by_alias,
+    get_function_by_id,
+    get_class_by_id,
 )
 from vim_python_domain_knowledge.ast.utils import (
     ast_import_to_lines_str,
@@ -200,3 +203,29 @@ def get_autocompletions_options_str():
     last_part = ']'
 
     return f'{first_part} {content} {last_part}'
+
+
+def get_search_options_str():
+    search_options = get_search_options()
+
+    return '[' + ','.join([f"'{opt}'" for opt in search_options]) + ']'
+
+
+def navigate_to_file_by_search_obj_id(obj_id):
+    file_path = None
+
+    if obj_id.startswith('c'):
+        class_obj = get_class_by_id(class_id=obj_id[1:])
+
+        if class_obj:
+            Vim.go_to_file(class_obj.file_path, 1)
+
+        return
+
+    if obj_id.startswith('f'):
+        function_obj = get_function_by_id(function_id=obj_id[:1])
+
+        if function_obj:
+            Vim.go_to_file(function_obj.file_path, 1)
+
+        return

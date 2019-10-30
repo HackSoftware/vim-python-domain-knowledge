@@ -11,7 +11,7 @@ def get_absolute_import_statement(obj_to_import: str) -> Import:
 
     cursor.execute(
         f'''
-        SELECT module, name, alias, is_relative
+        SELECT id, module, name, alias, is_relative
             FROM {DB_TABLES.IMPORTS}
             WHERE name=? and is_relative=0
             GROUP BY module
@@ -32,7 +32,7 @@ def get_absolute_import_statement_by_alias(obj_to_import: str) -> Import:
 
     cursor.execute(
         f'''
-        SELECT module, name, alias, is_relative
+        SELECT id, module, name, alias, is_relative
             FROM {DB_TABLES.IMPORTS}
             WHERE alias=? and is_relative=0
             GROUP BY module
@@ -53,7 +53,7 @@ def get_all_classes():
 
     cursor.execute(
         f'''
-        SELECT file_path, name, parents, module
+        SELECT id, file_path, name, parents, module
             FROM {DB_TABLES.CLASS_DEFINITIONS}
         ''',
     )
@@ -72,7 +72,7 @@ def get_all_functions():
 
     cursor.execute(
         f'''
-        SELECT file_path, name, module, arguments
+        SELECT id, file_path, name, module, arguments
             FROM {DB_TABLES.FUNCTION_DEFINITIONS}
         ''',
     )
@@ -85,13 +85,32 @@ def get_all_functions():
     ]
 
 
+def get_class_by_id(class_id: int) -> Optional[Class]:
+    connection = _get_db_connection()
+    cursor = connection.cursor()
+
+    cursor.execute(
+        f'''
+        SELECT id, file_path, name, parents, module
+            FROM {DB_TABLES.CLASS_DEFINITIONS}
+            WHERE id=?
+        ''',
+        (class_id, )
+    )
+
+    result = cursor.fetchone()
+
+    if result:
+        return Class(*result)
+
+
 def get_class(class_name: str) -> Optional[Class]:
     connection = _get_db_connection()
     cursor = connection.cursor()
 
     cursor.execute(
         f'''
-        SELECT file_path, name, parents, module
+        SELECT id, file_path, name, parents, module
             FROM {DB_TABLES.CLASS_DEFINITIONS}
             WHERE name=?
         ''',
@@ -104,13 +123,32 @@ def get_class(class_name: str) -> Optional[Class]:
         return Class(*result)
 
 
+def get_function_by_id(function_id: int) -> Optional[Function]:
+    connection = _get_db_connection()
+    cursor = connection.cursor()
+
+    cursor.execute(
+        f'''
+        SELECT id, file_path, name, module, arguments
+            FROM {DB_TABLES.FUNCTION_DEFINITIONS}
+            WHERE id=?
+        ''',
+        (function_id, )
+    )
+
+    result = cursor.fetchone()
+
+    if result:
+        return Function(*result)
+
+
 def get_function(function_name: str) -> Optional[Function]:
     connection = _get_db_connection()
     cursor = connection.cursor()
 
     cursor.execute(
         f'''
-        SELECT file_path, name, module, arguments
+        SELECT id, file_path, name, module, arguments
             FROM {DB_TABLES.FUNCTION_DEFINITIONS}
             WHERE name=?
         ''',
