@@ -11,6 +11,7 @@ Vim plugin for *Python 3+* 🐍 written in *Python 3+* 🐍 for project specific
         - [Plug](#plug)
         - [Pathogen](#pathogen)
     * [Setup for a project](#setup-for-a-project)
+* [Configuration](#configuration)
 * [Usage](#usage)
     * [Global autocomplete](#global-autocomplete)
     * [Global search](#global-search)
