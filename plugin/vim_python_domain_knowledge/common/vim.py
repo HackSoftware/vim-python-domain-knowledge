@@ -30,5 +30,4 @@ class Vim:
 
     @classmethod
     def go_to_file(cls, file_path, line):
-        vim.command(f'e {file_path}')
-        vim.command(str(line))
+        vim.command(f'e +{line} {file_path}')

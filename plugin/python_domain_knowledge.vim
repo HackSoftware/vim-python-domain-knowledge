@@ -18,8 +18,12 @@ python3 << endOfPython
 from vim_python_domain_knowledge.main import setup
 
 try:
+    print('What until plugin is ready...')
     setup()
+    print('Done :)')
 except Exception as exc:
+    print('Error while setting up PythonDomainKnowledge')
+    print(exc)
     pass
 endOfPython
 endfunction
@@ -186,7 +190,6 @@ try:
         navigate_to_file_by_search_obj_id(obj_id=obj_id)
 
 except Exception as exc:
-    print(exc)
     pass
 endOfPython
 endfunction

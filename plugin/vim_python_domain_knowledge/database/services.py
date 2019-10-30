@@ -25,7 +25,8 @@ def _create_imports_table():
         module TEXT,
         name TEXT,
         alias TEXT,
-        is_relative BOOLEAN
+        is_relative BOOLEAN,
+        lineno INTEGER
     )
     '''
     return _run_query(create_table_query)
@@ -43,7 +44,8 @@ def _create_class_definitions_table():
         file_path TEXT,
         name TEXT,
         parents TEXT,
-        module TEXT
+        module TEXT,
+        lineno INTEGER
     )
     '''
     return _run_query(create_table_query)
@@ -61,7 +63,8 @@ def _create_function_definitions_table():
         file_path TEXT,
         name TEXT,
         module TEXT,
-        arguments TEXT
+        arguments TEXT,
+        lineno INTEGER
     )
     '''
     return _run_query(create_table_query)
@@ -151,16 +154,17 @@ def insert_imports(imports: List[Import]):
         name_str = '.'.join(import_obj.name)
         alias_str = import_obj.alias or ''
         is_relative_str = '1' if import_obj.is_relative else '0'
+        lineno = import_obj.lineno
 
         imports_values.append(
-            f'("{module_str}", "{name_str}", "{alias_str}", "{is_relative_str}")'  # noqa
+            f'("{module_str}", "{name_str}", "{alias_str}", "{is_relative_str}", "{lineno}")'  # noqa
         )
 
     imports_str = ', '.join(imports_values)
 
     query = f'''
     INSERT INTO {DB_TABLES.IMPORTS}
-        (MODULE, NAME, ALIAS, IS_RELATIVE)
+        (MODULE, NAME, ALIAS, IS_RELATIVE, LINENO)
         VALUES {imports_str}
     '''
 
@@ -175,16 +179,17 @@ def insert_classes(classes: List[Class]):
         file_path = class_obj.file_path
         name = class_obj.name
         module = class_obj.module
+        lineno = class_obj.lineno
 
         classes_values.append(
-            f'("{file_path}", "{name}", "{parents_str}", "{module}")'
+            f'("{file_path}", "{name}", "{parents_str}", "{module}", "{lineno}")'
         )
 
     classes_str = ', '.join(classes_values)
 
     query = f'''
     INSERT INTO {DB_TABLES.CLASS_DEFINITIONS}
-        (FILE_PATH, NAME, PARENTS, MODULE)
+        (FILE_PATH, NAME, PARENTS, MODULE, LINENO)
         VALUES {classes_str}
     '''
 
@@ -199,16 +204,17 @@ def insert_functions(functions: List[Function]):
         name = function_obj.name
         module = function_obj.module
         arguments = ','.join(function_obj.arguments)
+        lineno = function_obj.lineno
 
         functions_values.append(
-            f'("{file_path}", "{name}", "{module}", "{arguments}")'
+            f'("{file_path}", "{name}", "{module}", "{arguments}", "{lineno}")'
         )
 
     functions_str = ', '.join(functions_values)
 
     query = f'''
     INSERT INTO {DB_TABLES.FUNCTION_DEFINITIONS}
-        (FILE_PATH, NAME, MODULE, ARGUMENTS)
+        (FILE_PATH, NAME, MODULE, ARGUMENTS, LINENO)
         VALUES {functions_str}
     '''
 

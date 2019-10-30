@@ -218,7 +218,7 @@ def navigate_to_file_by_search_obj_id(obj_id):
         class_obj = get_class_by_id(class_id=obj_id[1:])
 
         if class_obj:
-            Vim.go_to_file(class_obj.file_path, 1)
+            Vim.go_to_file(class_obj.file_path, class_obj.lineno)
 
         return
 
@@ -226,6 +226,6 @@ def navigate_to_file_by_search_obj_id(obj_id):
         function_obj = get_function_by_id(function_id=obj_id[1:])
 
         if function_obj:
-            Vim.go_to_file(function_obj.file_path, 1)
+            Vim.go_to_file(function_obj.file_path, function_obj.lineno)
 
         return

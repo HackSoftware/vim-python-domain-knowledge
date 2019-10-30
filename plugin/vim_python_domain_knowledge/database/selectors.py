@@ -11,7 +11,7 @@ def get_absolute_import_statement(obj_to_import: str) -> Import:
 
     cursor.execute(
         f'''
-        SELECT id, module, name, alias, is_relative
+        SELECT id, module, name, alias, is_relative, lineno
             FROM {DB_TABLES.IMPORTS}
             WHERE name=? and is_relative=0
             GROUP BY module
@@ -32,7 +32,7 @@ def get_absolute_import_statement_by_alias(obj_to_import: str) -> Import:
 
     cursor.execute(
         f'''
-        SELECT id, module, name, alias, is_relative
+        SELECT id, module, name, alias, is_relative, lineno
             FROM {DB_TABLES.IMPORTS}
             WHERE alias=? and is_relative=0
             GROUP BY module
@@ -53,7 +53,7 @@ def get_all_classes():
 
     cursor.execute(
         f'''
-        SELECT id, file_path, name, parents, module
+        SELECT id, file_path, name, parents, module, lineno
             FROM {DB_TABLES.CLASS_DEFINITIONS}
         ''',
     )
@@ -72,7 +72,7 @@ def get_all_functions():
 
     cursor.execute(
         f'''
-        SELECT id, file_path, name, module, arguments
+        SELECT id, file_path, name, module, arguments, lineno
             FROM {DB_TABLES.FUNCTION_DEFINITIONS}
         ''',
     )
@@ -91,7 +91,7 @@ def get_class_by_id(class_id: int) -> Optional[Class]:
 
     cursor.execute(
         f'''
-        SELECT id, file_path, name, parents, module
+        SELECT id, file_path, name, parents, module, lineno
             FROM {DB_TABLES.CLASS_DEFINITIONS}
             WHERE id=?
         ''',
@@ -110,7 +110,7 @@ def get_class(class_name: str) -> Optional[Class]:
 
     cursor.execute(
         f'''
-        SELECT id, file_path, name, parents, module
+        SELECT id, file_path, name, parents, module, lineno
             FROM {DB_TABLES.CLASS_DEFINITIONS}
             WHERE name=?
         ''',
@@ -129,7 +129,7 @@ def get_function_by_id(function_id: int) -> Optional[Function]:
 
     cursor.execute(
         f'''
-        SELECT id, file_path, name, module, arguments
+        SELECT id, file_path, name, module, arguments, lineno
             FROM {DB_TABLES.FUNCTION_DEFINITIONS}
             WHERE id=?
         ''',
@@ -148,7 +148,7 @@ def get_function(function_name: str) -> Optional[Function]:
 
     cursor.execute(
         f'''
-        SELECT id, file_path, name, module, arguments
+        SELECT id, file_path, name, module, arguments, lineno
             FROM {DB_TABLES.FUNCTION_DEFINITIONS}
             WHERE name=?
         ''',
