@@ -13,6 +13,7 @@ Vim plugin for *Python 3+* 🐍 written in *Python 3+* 🐍 for project specific
     * [Setup for a project](#setup-for-a-project)
 * [Usage](#usage)
     * [Global autocomplete](#global-autocomplete)
+    * [Global search](#global-search)
     * [Automatic import filling](#automatic-import-filling)
 * [Feedback](#feedback)
 - - -
@@ -27,7 +28,7 @@ More about this: [here](#global-autocomplete)
 
 NOTE: This plugin is not a replacement of [jedi-vim](https://github.com/davidhalter/jedi-vim). It provides a first-level autocomplete for everything inside the project (jedi provides detailed attributes specific autocomplete only for variables in the context)
 
-2. Global search for all classes and functions in the projects
+2. Global search for all classes and functions in the projects using the vim embedded search pattern matching
 
 3. Automatically autofill the import for:
   - every class that's defined inside the project (no matter in which file)
