@@ -137,6 +137,9 @@ cd /path/to/project
 ```
 " To map your shortcut for autofilling import for the word under the cursor
 nnoremap <your_custom_mapping> :call PythonDomainKnowledgeFillImport()<CR>
+
+" To map your shortcut for global searching
+noremap <C-m> :call PythonDomainKnowledgeSearch()<Cr>
 ```
 
 Sample configuration:
@@ -144,6 +147,9 @@ Sample configuration:
 ```
 " This will autofill the import for the word under the cursor when you press F9 key (in normal mode) :)
 nnoremap <F9> :call PythonDomainKnowledgeFillImport()<CR>
+
+" This will open the search as soon as you press "ctrl + m" in normal mode
+noremap <C-m> :call PythonDomainKnowledgeSearch()<Cr>
 ```
 
 ## Usage
