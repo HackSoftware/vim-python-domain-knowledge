@@ -27,3 +27,7 @@ class Vim:
 
         current_buffer.append(import_statement, line)
         current_window.cursor = (cursor_current_row + 1, cursor_current_col)
+
+    @classmethod
+    def go_to_file(cls, file_path, line):
+        vim.command(f'e +{line} {file_path}')

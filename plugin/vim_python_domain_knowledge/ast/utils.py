@@ -67,22 +67,26 @@ def ast_class_to_class_obj(ast_class: ast.ClassDef, file_path: str) -> Class:
             parents.append(base.attr)
 
     return Class(
+        id=None,
         file_path=file_path,
         name=ast_class.name,
         parents=parents,
-        module=get_python_module_str_from_filepath(file_path)
+        module=get_python_module_str_from_filepath(file_path),
+        lineno=ast_class.lineno
     )
 
 
 def ast_function_to_function_obj(ast_function: ast.FunctionDef, file_path: str) -> Function:
     return Function(
+        id=None,
         file_path=file_path,
         name=ast_function.name,
         module=get_python_module_str_from_filepath(file_path),
         arguments=[
             *[el.arg for el in ast_function.args.args],
             *[el.arg for el in ast_function.args.kwonlyargs],
-        ]
+        ],
+        lineno=ast_function.lineno
     )
 
 
@@ -108,10 +112,12 @@ def ast_import_and_import_from_to_import_objects(
 
     return [
         Import(
+            id=None,
             module=module,
             name=el.name.split('.'),
             alias=el.asname,
-            is_relative=is_relative
+            is_relative=is_relative,
+            lineno=ast_import.lineno
         )
         for el in ast_import.names
     ]
