@@ -27,7 +27,9 @@ More about this: [here](#global-autocomplete)
 
 NOTE: This plugin is not a replacement of [jedi-vim](https://github.com/davidhalter/jedi-vim). It provides a first-level autocomplete for everything inside the project (jedi provides detailed attributes specific autocomplete only for variables in the context)
 
-2. Automatically autofill the import for:
+2. Global search for all classes and functions in the projects
+
+3. Automatically autofill the import for:
   - every class that's defined inside the project (no matter in which file)
   - every function that's defined inside the project (no matter in which file)
   - every imported stuff (from any third party library inside the project)
