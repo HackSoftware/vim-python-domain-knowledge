@@ -1,6 +1,6 @@
 # Python Domain Knowledge - Vim plugin for Python 3+
 
-Vim plugin for *Python 3+* 🐍 written in *Python 3+* 🐍 for project specific *autocomplete* of functions and classes and *automatic import filing*
+Vim plugin for *Python 3+* 🐍 written in *Python 3+* 🐍 for project specific *autocomplete* and *search* of functions and classes and *automatic import filling*
 
 - - -
 * [Overview](#Overview)
@@ -45,7 +45,7 @@ A really common action in the python development is using functions that are not
 
 1. Start typing the name (probably forgot the exact name since is long and explicitly descriptive)
 2. Jump to the top of the file looking at the imports
-3. Remember the place where the function lives
+3. Remember the place where the function lives (probably grep inside the project)
 4. Find the right place in the imports to put the new function import
 5. Start typing by autosuggesting the name using the import location
 6. Jump back to the place where you want to use the function and autocomlete it
