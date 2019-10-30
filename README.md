@@ -155,12 +155,22 @@ NOTE: You can remap this ^ . It's the default vim shortcut for autocomplete from
 
 ![Autocomplete demo](./readme_media/auto_complete_demo.gif "Autocomplete demo")
 
+### Global search
+In normal model run
+```
+:call PythonDomainKnowledgeSearch()
+```
+
+(or a keybinding for this)
+
+![Global search demo](./readme_media/search_demo.gif "Search Demo")
+
 ### Automatic import filling
 
 Write the full name of the function/class you want to use. Then in *normal mode* run:
 
 ```
-:call PythonDomainKnowledgeFillImport()<CR>
+:call PythonDomainKnowledgeFillImport()
 ```
 
 (or a keybinding for this)
@@ -168,7 +178,6 @@ Write the full name of the function/class you want to use. Then in *normal mode*
 ![Import autofil demo](./readme_media/fill_imports_demo.gif "Autofil import demo 1")
 
 ![Import autofil demo](./readme_media/fill_imports_demo_2.gif "Autofil import demo 1")
-
 
 ## Feedback
 
