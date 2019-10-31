@@ -21,7 +21,7 @@ Vim plugin for *Python 3+* 🐍 written in *Python 3+* 🐍 for project specific
 
 ## Overview
 
-The current state of `vim-python-domain-knowledge`has 2 responsibilities:
+The current state of `vim-python-domain-knowledge`has 3 responsibilities:
 
 1. Global "project specific" autocomplete for all classes and functions that are defined inside a given projects
 
