@@ -61,6 +61,8 @@ The aim of this plugin is to automate this process by generating knowledge for y
 
 #### Vundle
 
+Make sure you have installed [Sqlite](https://www.sqlite.org/) first!
+
 Place this in your `.vimrc`
 
 ```
@@ -77,6 +79,8 @@ PluginInstall
 
 #### Plug
 
+Make sure you have installed [Sqlite](https://www.sqlite.org/) first!
+
 Place this in your `.vimrc`
 
 ```
@@ -92,6 +96,8 @@ PlugInstall
 ```
 
 #### Pathogen
+
+Make sure you have installed [Sqlite](https://www.sqlite.org/) first!
 
 Run the following in a terminal:
 
